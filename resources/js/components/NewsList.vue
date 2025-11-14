@@ -31,7 +31,7 @@
 
       <section class="news-list" id="arsip">
         <div class="news-list__grid">
-          <article v-for="item in newsItems" :key="item.title" class="news-card">
+          <article v-for="item in items" :key="item.title" class="news-card">
             <figure class="news-card__media">
               <img :src="item.image" :alt="item.title" loading="lazy" />
               <figcaption>{{ item.category }}</figcaption>
@@ -43,7 +43,12 @@
               </div>
               <h2>{{ item.title }}</h2>
               <p>{{ item.summary }}</p>
-              <button type="button" class="news-card__link">Baca Selengkapnya</button>
+              <RouterLink
+                class="news-card__link"
+                :to="{ name: 'news-detail', params: { slug: item.slug } }"
+              >
+                Baca Selengkapnya
+              </RouterLink>
             </div>
           </article>
         </div>
@@ -84,66 +89,9 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
+import { newsItems } from '../data/news';
 
-const newsItems = [
-  {
-    title: 'Workshop Coding untuk Anak',
-    date: '15 Desember 2025',
-    readTime: 4,
-    category: 'Pelatihan',
-    summary:
-      'Anak-anak belajar dasar-dasar programming dengan pendekatan bermain yang dipandu relawan teknologi.',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Kelas Bahasa Interaktif',
-    date: '12 Desember 2025',
-    readTime: 3,
-    category: 'Pembelajaran',
-    summary: 'Sesi storytelling dan games untuk memperkuat kepercayaan diri anak-anak dalam berbahasa Inggris.',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Perpustakaan Mini Kini Dibuka',
-    date: '31 Desember 2025',
-    readTime: 5,
-    category: 'Fasilitas',
-    summary: 'Lebih dari 200 koleksi buku baru tersedia untuk mendukung budaya literasi di Terminal Pintar.',
-    image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Sharing Session Orang Tua',
-    date: '25 November 2025',
-    readTime: 4,
-    category: 'Komunitas',
-    summary: 'Orang tua berbagi pengalaman mendampingi anak belajar dan berdiskusi strategi kolaboratif.',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Peluncuran Modul STEAM',
-    date: '20 November 2025',
-    readTime: 6,
-    category: 'Program',
-    summary: 'Modul baru STEAM dikenalkan untuk menumbuhkan daya pikir kritis dan kreatif peserta.',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Terminal Pintar di Festival Literasi',
-    date: '05 November 2025',
-    readTime: 3,
-    category: 'Kegiatan',
-    summary: 'Relawan Terminal Pintar memamerkan karya peserta dan mengajak publik mencoba kelas kilat.',
-    image: 'https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    title: 'Pojok Konseling Diresmikan',
-    date: '27 Oktober 2025',
-    readTime: 4,
-    category: 'Pendampingan',
-    summary: 'Layanan konseling untuk anak dan orang tua kini hadir guna memperkuat dukungan psikososial.',
-    image: 'https://images.unsplash.com/photo-1544776193-352d25ca81b1?q=80&w=1200&auto=format&fit=crop',
-  },
-];
+const items = newsItems;
 </script>
 
 <style scoped>
@@ -360,12 +308,20 @@ const newsItems = [
   font-weight: 500;
   padding: 0.5rem 1.25rem;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .news-card__link:hover {
   background: #78ae4e;
   color: #fff;
+}
+
+.news-card__link:focus-visible {
+  outline: 3px solid rgba(120, 174, 78, 0.4);
+  outline-offset: 2px;
 }
 
 .news-list__pagination {

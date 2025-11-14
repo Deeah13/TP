@@ -70,11 +70,18 @@
                 <h3>{{ activity.title }}</h3>
                 <span class="activity-card__date">{{ activity.date }}</span>
                 <p>{{ activity.description }}</p>
-                <button type="button" class="activity-card__link">Baca Selengkapnya</button>
+                <RouterLink
+                  class="activity-card__link"
+                  :to="{ name: 'news-detail', params: { slug: activity.slug } }"
+                >
+                  Baca Selengkapnya
+                </RouterLink>
               </div>
             </article>
           </div>
-          <button type="button" class="activities__more">Lihat Semua Kegiatan</button>
+          <RouterLink class="activities__more" :to="{ name: 'news' }">
+            Lihat Semua Kegiatan
+          </RouterLink>
         </div>
       </section>
 
@@ -175,30 +182,15 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
+import { newsItems } from '../data/news';
 
-const activities = [
-  {
-    title: 'Workshop Coding untuk Anak',
-    date: '15 Desember 2025',
-    description:
-      'Anak-anak belajar dasar-dasar programming dengan metode eksploratif dan permainan interaktif.',
-    image: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2070&auto=format&fit=crop',
-  },
-  {
-    title: 'Kelas Bahasa Interaktif',
-    date: '12 Desember 2025',
-    description:
-      'Sesi pembelajaran Bahasa Inggris dengan storytelling dan games untuk meningkatkan kosa kata.',
-    image: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=2070&auto=format&fit=crop',
-  },
-  {
-    title: 'Perpustakaan Mini Kini Dibuka',
-    date: '31 Desember 2025',
-    description:
-      'Lebih dari 200 buku anak kini tersedia di perpustakaan mini Terminal Pintar untuk menunjang literasi.',
-    image: 'https://images.unsplash.com/photo-1535909339361-9b19be8ec1b4?q=80&w=2070&auto=format&fit=crop',
-  },
-];
+const activities = newsItems.slice(0, 3).map((item) => ({
+  title: item.title,
+  date: item.date,
+  description: item.summary,
+  image: item.image,
+  slug: item.slug,
+}));
 
 const steps = [
   {
@@ -513,14 +505,22 @@ const scrollToSection = (section) => {
   border-radius: 999px;
   color: #76b340;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
   font-weight: 600;
   padding: 0.4rem 1.2rem;
+  text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .activity-card__link:hover {
   background: #76b340;
   color: #fff;
+}
+
+.activity-card__link:focus-visible {
+  outline: 3px solid rgba(118, 179, 64, 0.4);
+  outline-offset: 2px;
 }
 
 .activities__more {
@@ -533,6 +533,8 @@ const scrollToSection = (section) => {
   font-weight: 600;
   margin: 0 auto;
   padding: 0.8rem 1.9rem;
+  text-align: center;
+  text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
