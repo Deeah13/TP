@@ -29,29 +29,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Galeri foto anak-anak mengerjakan proyek coding bersama mentor',
-      team: [
-        { name: 'Nabila Nurahani', role: 'Pengajar' },
-        { name: 'Andi Rahmadi', role: 'Pengurus' },
-        { name: 'Hanifah Ahmada', role: 'Pengajar' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Mari ikut berdonasi untuk membantu mereka yang membutuhkan. Dukungan Anda sangat berarti..',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1521790361543-f645cf042ec4?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Ilustrasi donasi komunitas',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Mari ikut menjadi relawan untuk membantu mereka yang membutuhkan. Bantuan Anda sangat berarti..',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Ilustrasi relawan edukasi',
-        },
-      ],
       contacts: {
         phone: '+6289123456789',
         email: 'terminalpintar@gmail.com',
@@ -86,29 +63,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1461532257246-777de18cd58b?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Anak-anak bermain peran dalam kelas bahasa',
-      team: [
-        { name: 'Rara Pradnyawati', role: 'Fasilitator' },
-        { name: 'Dio Permadi', role: 'Relawan Bahasa' },
-        { name: 'Saskia Rumi', role: 'Pendamping Orang Tua' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Dukung penyediaan buku cerita bilingual dan alat peraga agar kelas dapat terus berjalan.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Tumpukan buku cerita anak',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Bergabung menjadi fasilitator cerita atau mentor percakapan untuk mendampingi peserta.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan membimbing peserta membaca',
-        },
-      ],
       contacts: {
         phone: '+6281122334455',
         email: 'kelasbahasa@terminalpintar.id',
@@ -143,29 +97,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Anak-anak membaca buku di perpustakaan mini',
-      team: [
-        { name: 'Laily Maghfira', role: 'Koordinator Perpustakaan' },
-        { name: 'Reyhan Salim', role: 'Relawan Literasi' },
-        { name: 'Putri Anggraini', role: 'Kurator Koleksi' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Salurkan buku bacaan anak atau dukungan finansial untuk memperkaya koleksi perpustakaan.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Ilustrasi donasi buku',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Ikut mengelola sirkulasi buku dan memfasilitasi klub baca pekanan Terminal Pintar.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1484662020986-75935d6c0d05?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan mengatur buku di rak',
-        },
-      ],
       contacts: {
         phone: '+6287788899900',
         email: 'perpustakaan@terminalpintar.id',
@@ -200,29 +131,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Forum orang tua Terminal Pintar',
-      team: [
-        { name: 'Mentari Widyasari', role: 'Moderator' },
-        { name: 'Yoga Pramudya', role: 'Fasilitator Diskusi' },
-        { name: 'Ayunda Kusuma', role: 'Tim Konseling' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Dukungan logistik untuk pertemuan komunitas membantu keberlanjutan forum orang tua.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1515169067865-5387ec356754?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Makanan ringan untuk pertemuan komunitas',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Fasilitator komunitas dibutuhkan untuk merancang aktivitas berbagi dan dukungan psikososial.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1521791055366-0d553872125f?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan memfasilitasi diskusi',
-        },
-      ],
       contacts: {
         phone: '+6282233445566',
         email: 'komunitas@terminalpintar.id',
@@ -257,29 +165,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Eksperimen STEAM bersama relawan',
-      team: [
-        { name: 'Arman Rasyid', role: 'Lead Kurikulum' },
-        { name: 'Tia Sasmita', role: 'Instruktur STEAM' },
-        { name: 'Firly Nugraha', role: 'Relawan Teknik' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Dukung penyediaan alat eksperimen sederhana agar modul STEAM dapat menjangkau lebih banyak anak.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Peralatan eksperimen anak',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Relawan dengan latar belakang teknik dan pendidikan dibutuhkan untuk memandu sesi STEAM.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan memandu percobaan sains',
-        },
-      ],
       contacts: {
         phone: '+628998887766',
         email: 'steam@terminalpintar.id',
@@ -314,29 +199,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Pengunjung festival literasi melihat karya peserta',
-      team: [
-        { name: 'Maura Adeline', role: 'Koordinator Stan' },
-        { name: 'Reza Firmansyah', role: 'Relawan Presentasi' },
-        { name: 'Erlangga Dewi', role: 'Kreator Konten' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Dukungan Anda membantu produksi materi literasi dan transportasi ke berbagai festival komunitas.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Kegiatan kampanye literasi',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Relawan kreatif dibutuhkan untuk menyiapkan materi pameran dan mendampingi pengunjung.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1515169067865-5387ec356754?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan menyambut pengunjung',
-        },
-      ],
       contacts: {
         phone: '+6286655443322',
         email: 'literasi@terminalpintar.id',
@@ -371,29 +233,6 @@ export const newsItems = [
       ],
       galleryImage: 'https://images.unsplash.com/photo-1521791055366-0d553872125f?q=80&w=1600&auto=format&fit=crop',
       galleryAlt: 'Sesi konseling keluarga di Terminal Pintar',
-      team: [
-        { name: 'Dinda Wardhani', role: 'Psikolog Anak' },
-        { name: 'Galih Ardhana', role: 'Konselor Keluarga' },
-        { name: 'Ratri Nandini', role: 'Koordinator Layanan' },
-      ],
-      contributions: [
-        {
-          title: 'DONASI',
-          description: 'Dukungan alat permainan edukatif dan modul konseling sangat membantu keberlangsungan layanan.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#donasi-detail' },
-          secondaryCta: { label: 'Lihat Cara Berdonasi', href: '#cara-donasi' },
-          image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Alat permainan edukatif untuk konseling',
-        },
-        {
-          title: 'RELAWAN',
-          description: 'Profesional di bidang psikologi dan pendidikan dipersilakan menjadi relawan sesi konseling.',
-          primaryCta: { label: 'Baca Selengkapnya', href: '#relawan-detail' },
-          secondaryCta: { label: 'Lihat Cara Mendaftar', href: '#cara-daftar' },
-          image: 'https://images.unsplash.com/photo-1532619187606-3c874c7c8df8?q=80&w=1200&auto=format&fit=crop',
-          imageAlt: 'Relawan memberikan dukungan psikologis',
-        },
-      ],
       contacts: {
         phone: '+6285544332211',
         email: 'konseling@terminalpintar.id',

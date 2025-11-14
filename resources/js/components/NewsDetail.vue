@@ -46,44 +46,10 @@
           <img :src="article.detail.galleryImage" :alt="article.detail.galleryAlt" />
         </figure>
 
-        <section class="doc-detail__team" aria-label="Tim penyelenggara kegiatan">
-          <div v-for="member in article.detail.team" :key="member.name" class="team-card">
-            <p class="team-card__name">{{ member.name }}</p>
-            <p class="team-card__role">{{ member.role }}</p>
-          </div>
-        </section>
-
         <a class="doc-detail__scroll-top" href="#top" aria-label="Kembali ke atas">
           ⬆️
         </a>
       </article>
-
-      <section class="doc-detail__contribution">
-        <h2 class="contribution__title">Mari Berkontribusi Membangun Harapan!</h2>
-        <div class="contribution__grid">
-          <article
-            v-for="contribution in article.detail.contributions"
-            :key="contribution.title"
-            class="contribution-card"
-          >
-            <img :src="contribution.image" :alt="contribution.imageAlt" class="contribution-card__image" />
-            <h3 class="contribution-card__heading">{{ contribution.title }}</h3>
-            <p class="contribution-card__copy">{{ contribution.description }}</p>
-            <a class="contribution-card__cta" :href="contribution.primaryCta.href">
-              {{ contribution.primaryCta.label }}
-            </a>
-            <a class="contribution-card__link" :href="contribution.secondaryCta.href">
-              {{ contribution.secondaryCta.label }}
-            </a>
-          </article>
-        </div>
-
-        <div class="doc-detail__ornaments" aria-hidden="true">
-          <span class="ornament ornament--one">🎁</span>
-          <span class="ornament ornament--two">🤝</span>
-          <span class="ornament ornament--three">📚</span>
-        </div>
-      </section>
     </main>
 
     <footer v-if="article" class="doc-detail__footer" role="contentinfo">
@@ -364,31 +330,6 @@ watch(
   height: 280px;
 }
 
-.doc-detail__team {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 2.5rem;
-}
-
-.team-card {
-  background: linear-gradient(135deg, rgba(118, 179, 64, 0.12), rgba(255, 255, 255, 0.95));
-  border: 1px solid rgba(118, 179, 64, 0.2);
-  border-radius: 18px;
-  padding: 1.25rem;
-  text-align: center;
-}
-
-.team-card__name {
-  font-weight: 600;
-  margin: 0 0 0.25rem;
-}
-
-.team-card__role {
-  color: #5f6b7c;
-  font-size: 0.9rem;
-  margin: 0;
-}
 
 .doc-detail__scroll-top {
   align-items: center;
@@ -407,106 +348,6 @@ watch(
   transform: translateX(-50%);
   width: 48px;
   box-shadow: 0 12px 24px rgba(118, 179, 64, 0.15);
-}
-
-.doc-detail__contribution {
-  margin: 5rem auto 0;
-  max-width: 960px;
-  position: relative;
-  text-align: center;
-}
-
-.contribution__title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.contribution__grid {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.contribution-card {
-  background: #ffffff;
-  border: 1px solid rgba(202, 196, 208, 0.5);
-  border-radius: 28px;
-  box-shadow: 0 20px 45px rgba(31, 41, 51, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 2rem;
-  position: relative;
-  text-align: left;
-}
-
-.contribution-card__image {
-  border-radius: 18px;
-  height: 150px;
-  object-fit: cover;
-  width: 100%;
-}
-
-.contribution-card__heading {
-  color: #76b340;
-  font-size: 1.25rem;
-  margin: 0;
-}
-
-.contribution-card__copy {
-  color: #4d596a;
-  margin: 0;
-  line-height: 1.6;
-}
-
-.contribution-card__cta,
-.contribution-card__link {
-  border-radius: 999px;
-  display: inline-flex;
-  font-weight: 600;
-  justify-content: center;
-  padding: 0.55rem 1.5rem;
-  text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.contribution-card__cta {
-  background: linear-gradient(135deg, #76b340 0%, #4c8a13 100%);
-  color: #fff;
-}
-
-.contribution-card__cta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(118, 179, 64, 0.25);
-}
-
-.contribution-card__link {
-  border: 1px solid #76b340;
-  color: #76b340;
-  margin-top: -0.5rem;
-}
-
-.contribution-card__link:hover {
-  background: rgba(118, 179, 64, 0.1);
-}
-
-.doc-detail__ornaments {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2.5rem;
-}
-
-.ornament {
-  align-items: center;
-  background: rgba(118, 179, 64, 0.15);
-  border-radius: 50%;
-  color: #4c8a13;
-  display: inline-flex;
-  font-size: 1.2rem;
-  height: 48px;
-  justify-content: center;
-  width: 48px;
 }
 
 .doc-detail__footer {
