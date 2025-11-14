@@ -14,6 +14,7 @@
           <a href="#about">Tentang</a>
           <a href="#collaboration">Kolaborasi</a>
           <a href="#contact">Kontak</a>
+          <RouterLink :to="{ name: 'news' }">Dokumentasi</RouterLink>
         </nav>
         <button type="button" class="header__cta" @click="scrollToSection('contact')">
           Hubungi Kami
@@ -173,6 +174,8 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router';
+
 const activities = [
   {
     title: 'Workshop Coding untuk Anak',
