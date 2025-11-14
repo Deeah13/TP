@@ -7,6 +7,7 @@ export const newsItems = [
     readTime: 4,
     summary:
       'Anak-anak belajar dasar-dasar programming dengan pendekatan bermain yang dipandu relawan teknologi.',
+    relativeTime: '16 hari yang lalu',
     image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Workshop Coding untuk Anak - Terminal Pintar',
@@ -47,6 +48,7 @@ export const newsItems = [
     date: '12 Desember 2025',
     readTime: 3,
     summary: 'Sesi storytelling dan games untuk memperkuat kepercayaan diri anak-anak dalam berbahasa Inggris.',
+    relativeTime: '19 hari yang lalu',
     image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Kelas Bahasa Interaktif - Terminal Pintar',
@@ -81,6 +83,7 @@ export const newsItems = [
     date: '31 Desember 2025',
     readTime: 5,
     summary: 'Lebih dari 200 koleksi buku baru tersedia untuk mendukung budaya literasi di Terminal Pintar.',
+    relativeTime: '12 jam yang lalu',
     image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Perpustakaan Mini Terminal Pintar',
@@ -115,6 +118,7 @@ export const newsItems = [
     date: '25 November 2025',
     readTime: 4,
     summary: 'Orang tua berbagi pengalaman mendampingi anak belajar dan berdiskusi strategi kolaboratif.',
+    relativeTime: '23 hari yang lalu',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Sharing Session Orang Tua - Terminal Pintar',
@@ -149,6 +153,7 @@ export const newsItems = [
     date: '20 November 2025',
     readTime: 6,
     summary: 'Modul baru STEAM dikenalkan untuk menumbuhkan daya pikir kritis dan kreatif peserta.',
+    relativeTime: '1 bulan yang lalu',
     image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Peluncuran Modul STEAM - Terminal Pintar',
@@ -183,6 +188,7 @@ export const newsItems = [
     date: '05 November 2025',
     readTime: 3,
     summary: 'Relawan Terminal Pintar memamerkan karya peserta dan mengajak publik mencoba kelas kilat.',
+    relativeTime: '1 bulan yang lalu',
     image: 'https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Terminal Pintar di Festival Literasi',
@@ -217,6 +223,7 @@ export const newsItems = [
     date: '27 Oktober 2025',
     readTime: 4,
     summary: 'Layanan konseling untuk anak dan orang tua kini hadir guna memperkuat dukungan psikososial.',
+    relativeTime: '2 bulan yang lalu',
     image: 'https://images.unsplash.com/photo-1544776193-352d25ca81b1?q=80&w=1600&auto=format&fit=crop',
     detail: {
       metaTitle: 'Pojok Konseling Terminal Pintar',

@@ -1,456 +1,424 @@
 <template>
-  <div class="news">
-    <header class="news__nav">
-      <div class="nav__brand">
-        <span class="brand__logo">TP</span>
-        <div class="brand__text">
-          <strong>Terminal Pintar</strong>
-          <span>Portal Dokumentasi &amp; Berita</span>
-        </div>
-      </div>
-      <nav class="nav__links">
-        <RouterLink :to="{ name: 'home' }">Beranda</RouterLink>
-        <a href="#highlight">Sorotan</a>
-        <a href="#arsip">Arsip</a>
-        <a href="#kontak">Kontak</a>
+  <div class="LIST-BERITA" id="top">
+    <header class="navigation" role="banner">
+      <RouterLink class="logo-link" :to="{ name: 'home' }" aria-label="Kembali ke beranda">
+        <img class="logo-terminal-pintar-2" :src="assets.brandMark" alt="Logo Terminal Pintar" />
+      </RouterLink>
+      <h1 class="text-wrapper-13">Terminal Pintar</h1>
+      <nav aria-label="Navigasi utama">
+        <RouterLink :to="{ name: 'home' }" class="text-wrapper-16">Beranda</RouterLink>
+        <a href="#arsip" class="text-wrapper-15" @click.prevent="scrollTo('arsip')">Kegiatan</a>
       </nav>
-      <RouterLink class="nav__cta" :to="{ name: 'home' }">Kembali ke Landing</RouterLink>
+      <a class="div-wrapper" href="/login">
+        <span class="text-wrapper-14">Login</span>
+      </a>
     </header>
 
-    <main class="news__content">
-      <section class="hero" id="highlight">
-        <p class="hero__intro">
-          Selamat Datang di Dokumentasi dan Berita, dapatkan informasi terkait Terminal Pintar di sini!
-        </p>
-        <h1>Daftar Dokumentasi dan Berita</h1>
-        <p class="hero__lead">
-          Rangkuman kegiatan, cerita pengajar, dan kabar terbaru kami sajikan untuk menjaga Anda tetap terhubung
-          dengan perkembangan Terminal Pintar.
-        </p>
+    <img class="logo-terminal-pintar" :src="assets.badge" alt="Terminal Pintar" />
+
+    <main>
+      <h2 class="text-wrapper">Daftar Dokumentasi dan Berita</h2>
+      <p class="welkam">
+        Selamat Datang di Dokumentasi dan Berita, dapatkan informasi terkait Terminal Pintar di sini!
+      </p>
+
+      <section class="news-section" aria-label="Daftar berita" id="arsip">
+        <article v-for="(item, index) in items" :key="item.slug" :class="['news-card', cardClasses[index] ?? '']">
+          <img class="news-card__image" :src="item.image" :alt="item.title" loading="lazy" />
+          <h3 class="news-card__title">{{ item.title }}</h3>
+          <time class="news-card__date" :datetime="item.detail.isoDate">{{ item.date }}</time>
+          <span class="news-card__relative">{{ item.relativeTime }}</span>
+          <RouterLink class="cart-button" :to="{ name: 'news-detail', params: { slug: item.slug } }">
+            <span class="text-wrapper-4">Baca Selengkapnya</span>
+          </RouterLink>
+        </article>
       </section>
 
-      <section class="news-list" id="arsip">
-        <div class="news-list__grid">
-          <article v-for="item in items" :key="item.title" class="news-card">
-            <figure class="news-card__media">
-              <img :src="item.image" :alt="item.title" loading="lazy" />
-              <figcaption>{{ item.category }}</figcaption>
-            </figure>
-            <div class="news-card__body">
-              <div class="news-card__meta">
-                <span>{{ item.date }}</span>
-                <span>{{ item.readTime }} menit baca</span>
-              </div>
-              <h2>{{ item.title }}</h2>
-              <p>{{ item.summary }}</p>
-              <RouterLink
-                class="news-card__link"
-                :to="{ name: 'news-detail', params: { slug: item.slug } }"
-              >
-                Baca Selengkapnya
-              </RouterLink>
-            </div>
-          </article>
-        </div>
-        <div class="news-list__pagination">
-          <p>Menampilkan 1-7 dari 57 Berita</p>
-          <nav aria-label="Navigasi halaman">
-            <button type="button" class="pager pager--prev" aria-label="Sebelumnya">‹</button>
-            <button type="button" class="pager pager--active" aria-current="page">1</button>
-            <button type="button" class="pager" disabled>2</button>
-            <button type="button" class="pager" disabled>3</button>
-            <button type="button" class="pager pager--next" aria-label="Berikutnya">›</button>
-          </nav>
-        </div>
-      </section>
-
-      <section class="cta" id="kontak">
-        <div class="cta__text">
-          <h2>Mari Berkolaborasi untuk Perluasan Dampak</h2>
-          <p>
-            Cerita dan laporan ini hanya sebagian kecil dari ekosistem Terminal Pintar. Hubungi kami untuk
-            berdiskusi, berbagi ide kegiatan, atau menjajaki kemitraan.
-          </p>
-        </div>
-        <div class="cta__channels">
-          <a class="channel" href="mailto:terminalpintar@gmail.com">
-            <span class="channel__icon">📧</span>
-            <span>terminalpintar@gmail.com</span>
-          </a>
-          <a class="channel" href="https://www.youtube.com/" target="_blank" rel="noopener">
-            <span class="channel__icon">▶️</span>
-            <span>Terminal Pintar Channel</span>
-          </a>
-        </div>
-      </section>
+      <footer class="pagination-footer">
+        <p class="text-wrapper-11">Menampilkan 1-7 dari 57 Berita</p>
+        <nav class="group" aria-label="Navigasi halaman">
+          <button type="button" class="pagination-prev" aria-label="Halaman sebelumnya">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <span class="rectangle" aria-current="page">
+            <span class="text-wrapper-12">1</span>
+          </span>
+          <button type="button" class="pagination-next" aria-label="Halaman berikutnya">
+            <span aria-hidden="true">›</span>
+          </button>
+        </nav>
+      </footer>
     </main>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { newsItems } from '../data/news';
 
-const items = newsItems;
+const assets = {
+  brandMark: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&q=80',
+  badge: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=200&auto=format&fit=crop',
+};
+
+const cardClasses = [
+  'news-card--primary',
+  'news-card--secondary',
+  'news-card--tertiary',
+  'news-card--accent',
+  'news-card--mint',
+  'news-card--sky',
+  'news-card--warm',
+];
+
+const items = computed(() => newsItems.slice(0, 7));
+
+const scrollTo = (id) => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const target = document.getElementById(id);
+
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 </script>
 
 <style scoped>
-.news {
+.LIST-BERITA {
   background-color: #f2f2f7;
   border: 8px solid #cac4d0;
-  min-height: 100vh;
+  border-radius: 24px;
+  color: #1f2933;
+  font-family: 'Poppins', 'Plus Jakarta Sans', system-ui, sans-serif;
+  min-height: 1019px;
   min-width: 1127px;
   overflow: hidden;
-  font-family: 'Poppins', 'Plus Jakarta Sans', system-ui, sans-serif;
-  color: #1f2933;
+  position: relative;
 }
 
-.news__nav {
+.navigation {
   align-items: center;
-  display: flex;
-  justify-content: space-between;
-  padding: 1.5rem 3rem;
   background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(202, 196, 208, 0.5);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  border-bottom: 1px solid rgba(202, 196, 208, 0.6);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: auto auto 1fr auto;
+  padding: 1.25rem 2.5rem;
 }
 
-.nav__brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.brand__logo {
-  align-items: center;
-  background: linear-gradient(135deg, #78ae4e 0%, #4b8a13 100%);
-  border-radius: 14px;
-  color: #fff;
+.logo-link {
   display: inline-flex;
-  font-weight: 700;
+  align-items: center;
+}
+
+.logo-terminal-pintar-2 {
+  border-radius: 12px;
   height: 44px;
-  justify-content: center;
+  object-fit: cover;
   width: 44px;
 }
 
-.brand__text {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.85rem;
-  line-height: 1.2;
+.text-wrapper-13 {
+  color: #2a2a2a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
 }
 
-.brand__text strong {
-  font-size: 1.05rem;
-}
-
-.nav__links {
-  display: flex;
+.navigation nav {
+  align-items: center;
+  display: inline-flex;
   gap: 1.5rem;
-  font-weight: 500;
+  justify-content: flex-end;
 }
 
-.nav__links a {
-  color: #3c4b5f;
+.navigation a {
+  color: #4b5c72;
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
   position: relative;
   transition: color 0.2s ease;
 }
 
-.nav__links a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -0.35rem;
-  width: 100%;
-  height: 2px;
+.navigation a::after {
   background: linear-gradient(90deg, #78ae4e, #4b8a13);
+  border-radius: 999px;
+  bottom: -6px;
+  content: '';
+  height: 3px;
+  left: 0;
+  position: absolute;
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.2s ease;
+  width: 100%;
 }
 
-.nav__links a:hover {
+.navigation a:hover {
   color: #4b8a13;
 }
 
-.nav__links a:hover::after,
-.nav__links .router-link-active::after {
+.navigation a:hover::after,
+.navigation .router-link-active::after {
   transform: scaleX(1);
 }
 
-.nav__cta {
-  background: #78ae4e;
-  border-radius: 8px;
+.div-wrapper {
+  background: linear-gradient(135deg, #78ae4e 0%, #4b8a13 100%);
+  border-radius: 999px;
   color: #fff;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
+  display: inline-flex;
+  padding: 0.6rem 1.75rem;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.nav__cta:hover {
-  background: #4b8a13;
+.div-wrapper:hover {
+  box-shadow: 0 12px 24px rgba(72, 137, 33, 0.3);
   transform: translateY(-2px);
 }
 
-.news__content {
-  padding: 3rem 3rem 4rem;
+.text-wrapper-14 {
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 3rem;
+.logo-terminal-pintar {
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(47, 79, 31, 0.15);
+  height: 56px;
+  left: 2rem;
+  object-fit: cover;
+  position: absolute;
+  top: 0.85rem;
+  width: 56px;
+  z-index: 0;
 }
 
-.hero__intro {
-  font-family: 'Lato', system-ui, sans-serif;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #3c4b5f;
-  margin-bottom: 1rem;
+main {
+  padding: 3rem 2.5rem 2.25rem;
+  position: relative;
+  z-index: 1;
 }
 
-.hero h1 {
+.text-wrapper {
   color: #78ae4e;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
 }
 
-.hero__lead {
-  max-width: 720px;
-  margin: 0 auto;
+.welkam {
   color: #4d596a;
+  font-family: 'Lato', system-ui, sans-serif;
+  font-size: 0.95rem;
   line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 680px;
 }
 
-.news-list__grid {
+.news-section {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .news-card {
-  background: #fff;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 24px;
-  border: 2px solid #e6e6e6;
-  box-shadow: 0 10px 30px rgba(44, 51, 73, 0.08);
+  box-shadow: 0 12px 30px rgba(44, 51, 73, 0.08);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 0.75rem;
+  padding: 1.75rem 1.5rem;
+  position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .news-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(44, 51, 73, 0.12);
+  box-shadow: 0 18px 40px rgba(44, 51, 73, 0.12);
 }
 
-.news-card__media {
-  position: relative;
-  height: 180px;
-  overflow: hidden;
-}
-
-.news-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.news-card__media figcaption {
+.news-card::before {
+  content: '';
+  height: 4px;
+  left: 1.5rem;
   position: absolute;
-  left: 1.25rem;
-  bottom: 1.25rem;
-  background: rgba(120, 174, 78, 0.9);
-  color: #fff;
-  padding: 0.35rem 0.75rem;
+  top: 1.5rem;
+  width: 54px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  background: #78ae4e;
 }
 
-.news-card__body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.75rem;
+.news-card__image {
+  border-radius: 18px;
+  height: 160px;
+  object-fit: cover;
+  width: 100%;
 }
 
-.news-card__meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #6b7280;
-}
-
-.news-card__body h2 {
-  font-size: 1.15rem;
-  color: #1f2933;
+.news-card__title {
+  font-size: 1.05rem;
+  font-weight: 600;
   margin: 0;
+  padding-top: 0.35rem;
 }
 
-.news-card__body p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #4d596a;
-}
-
-.news-card__link {
-  align-self: flex-start;
-  background: #fff;
-  border: 1px solid #78ae4e;
-  border-radius: 6px;
-  color: #78ae4e;
+.news-card__date {
+  color: #6d6d6d;
   font-size: 0.85rem;
   font-weight: 500;
-  padding: 0.5rem 1.25rem;
-  cursor: pointer;
-  display: inline-flex;
+}
+
+.news-card__relative {
+  color: #8f9bad;
+  font-size: 0.8rem;
+}
+
+.cart-button {
   align-items: center;
+  background: #ffffff;
+  border: 1px solid #76b340;
+  border-radius: 6px;
+  color: #76b340;
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 600;
+  justify-content: center;
+  margin-top: auto;
+  padding: 0.55rem 1.25rem;
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.news-card__link:hover {
-  background: #78ae4e;
-  color: #fff;
+.cart-button:hover {
+  background: #76b340;
+  color: #ffffff;
 }
 
-.news-card__link:focus-visible {
-  outline: 3px solid rgba(120, 174, 78, 0.4);
-  outline-offset: 2px;
+.text-wrapper-4 {
+  white-space: nowrap;
 }
 
-.news-list__pagination {
+.news-card--primary::before {
+  background: linear-gradient(90deg, #78ae4e, #4b8a13);
+}
+
+.news-card--secondary::before {
+  background: linear-gradient(90deg, #5e72eb, #4b8a13);
+}
+
+.news-card--tertiary::before {
+  background: linear-gradient(90deg, #f97316, #facc15);
+}
+
+.news-card--accent::before {
+  background: linear-gradient(90deg, #f43f5e, #f97316);
+}
+
+.news-card--mint::before {
+  background: linear-gradient(90deg, #34d399, #10b981);
+}
+
+.news-card--sky::before {
+  background: linear-gradient(90deg, #38bdf8, #2563eb);
+}
+
+.news-card--warm::before {
+  background: linear-gradient(90deg, #fb7185, #facc15);
+}
+
+.pagination-footer {
   align-items: center;
+  color: #4d596a;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: space-between;
   margin-top: 3rem;
-  color: #4d596a;
 }
 
-.news-list__pagination nav {
+.text-wrapper-11 {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.group {
+  align-items: center;
   display: inline-flex;
   gap: 0.5rem;
 }
 
-.pager {
+.pagination-prev,
+.pagination-next {
   align-items: center;
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   color: #4d596a;
   cursor: pointer;
   display: inline-flex;
+  font-size: 1.1rem;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.rectangle {
+  align-items: center;
+  background: #78ae4e;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-flex;
   font-weight: 600;
   height: 36px;
   justify-content: center;
-  padding: 0 0.9rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  width: 36px;
 }
 
-.pager--active {
-  background: #78ae4e;
-  border-color: #78ae4e;
-  color: #fff;
-}
-
-.pager[disabled] {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.pager--prev,
-.pager--next {
-  font-size: 1.2rem;
-}
-
-.cta {
-  background: linear-gradient(135deg, rgba(120, 174, 78, 0.12), rgba(120, 174, 78, 0.35));
-  border-radius: 32px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin-top: 4rem;
-  padding: 2.5rem 3rem;
-  align-items: center;
-}
-
-.cta__text {
-  flex: 1 1 320px;
-}
-
-.cta__text h2 {
-  color: #2f4f1f;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.cta__text p {
-  color: #405163;
-  line-height: 1.7;
-}
-
-.cta__channels {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex: 1 1 240px;
-}
-
-.channel {
-  align-items: center;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(47, 79, 31, 0.08);
-  color: #2f4f1f;
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  text-decoration: none;
-  font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.channel:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 30px rgba(47, 79, 31, 0.12);
-}
-
-.channel__icon {
-  font-size: 1.5rem;
+.text-wrapper-12 {
+  font-size: 0.95rem;
 }
 
 @media (max-width: 1024px) {
-  .news {
+  .LIST-BERITA {
     min-width: 0;
   }
 
-  .news__nav,
-  .news__content {
-    padding: 1.5rem;
+  .navigation {
+    grid-template-columns: auto 1fr auto;
   }
 
-  .nav__links {
+  .navigation nav {
     display: none;
+  }
+
+  main {
+    padding: 2rem 1.5rem 2.5rem;
+  }
+
+  .news-section {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 
 @media (max-width: 640px) {
-  .hero h1 {
-    font-size: 2rem;
+  .text-wrapper {
+    font-size: 1.6rem;
   }
 
-  .news-list__grid {
-    grid-template-columns: 1fr;
+  .welkam {
+    font-size: 0.9rem;
   }
 
-  .news-list__pagination {
+  .pagination-footer {
     flex-direction: column;
     align-items: flex-start;
   }
