@@ -14,7 +14,7 @@
         <button class="home__icon-button" type="button" aria-label="Notifikasi">
           <img :src="assets.bell" alt="" aria-hidden="true" />
         </button>
-        <a class="home__login" href="/login">Login</a>
+        <RouterLink class="home__login" :to="{ name: 'login' }">Login</RouterLink>
       </div>
     </header>
 
@@ -186,6 +186,8 @@
       </button>
     </footer>
   </main>
+import { RouterLink } from 'vue-router';
+
 </template>
 
 <script setup>
