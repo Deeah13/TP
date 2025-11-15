@@ -21,7 +21,7 @@
         <button type="button" class="detail__icon" aria-label="Notifikasi">
           <img :src="assets.bell" alt="" aria-hidden="true" />
         </button>
-        <a class="detail__login" href="/login">Login</a>
+        <RouterLink class="detail__login" :to="{ name: 'login' }">Login</RouterLink>
       </div>
     </header>
 
