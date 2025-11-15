@@ -132,7 +132,7 @@ export function useAuth() {
       const response = await axios.post('/api/auth/login', {
         identifier: identifier.trim(),
         password,
-        role,
+        role: role || 'teacher',
         remember,
       });
 

@@ -14,8 +14,9 @@ class DemoUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $email = (string) env('DEMO_TEACHER_EMAIL');
+        $email = trim((string) env('DEMO_TEACHER_EMAIL'));
         $password = (string) env('DEMO_TEACHER_PASSWORD');
+        $password = $password !== '' ? trim($password) : '';
 
         if ($email === '' || $password === '') {
             $this->command?->warn('Lewati pembuatan akun demo guru karena kredensial belum dikonfigurasi.');
@@ -23,21 +24,24 @@ class DemoUserSeeder extends Seeder
             return;
         }
 
-        $username = (string) env('DEMO_TEACHER_USERNAME');
-        $name = env('DEMO_TEACHER_NAME', 'Guru Terminal Pintar');
-        $shortName = env('DEMO_TEACHER_SHORT_NAME');
-        $organization = env('DEMO_TEACHER_ORGANIZATION', 'Terminal Pintar');
-        $avatar = env('DEMO_TEACHER_AVATAR');
+        $username = trim((string) env('DEMO_TEACHER_USERNAME'));
+        $name = trim((string) env('DEMO_TEACHER_NAME', 'Guru Terminal Pintar')) ?: 'Guru Terminal Pintar';
+        $shortName = trim((string) env('DEMO_TEACHER_SHORT_NAME')) ?: null;
+        $organization = trim((string) env('DEMO_TEACHER_ORGANIZATION', 'Terminal Pintar')) ?: 'Terminal Pintar';
+        $avatar = trim((string) env('DEMO_TEACHER_AVATAR')) ?: null;
 
-        $user = User::query()->firstOrNew(['email' => strtolower($email)]);
+        $normalisedEmail = strtolower($email);
+
+        $user = User::query()->firstOrNew(['email' => $normalisedEmail]);
 
         $user->forceFill([
             'name' => $name,
-            'username' => $username !== '' ? $username : null,
+            'email' => $normalisedEmail,
+            'username' => $username !== '' ? strtolower($username) : null,
             'role' => 'teacher',
-            'short_name' => $shortName !== '' ? $shortName : ($user->short_name ?: $name),
+            'short_name' => $shortName !== null ? $shortName : ($user->short_name ?: $name),
             'organization_name' => $organization,
-            'avatar_url' => $avatar !== '' ? $avatar : null,
+            'avatar_url' => $avatar,
             'password' => Hash::make($password),
         ]);
 

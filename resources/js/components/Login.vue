@@ -57,23 +57,9 @@
             />
             <span v-if="errors.password" class="login__feedback">{{ errors.password }}</span>
           </div>
-
-          <label class="login__label" for="role">Masuk sebagai</label>
-          <div class="login__select">
-            <select
-              id="role"
-              v-model="form.role"
-              name="role"
-              :disabled="isSubmitting"
-              aria-describedby="role-help"
-            >
-              <option value="teacher">Guru / Relawan</option>
-              <option value="admin">Admin</option>
-              <option value="parent">Orang Tua</option>
-            </select>
-            <span id="role-help">Pilih peran sesuai akses yang diberikan.</span>
-          </div>
         </fieldset>
+
+        <input id="role" v-model="form.role" type="hidden" name="role" value="teacher" />
 
         <div class="login__options">
           <label class="login__checkbox">
@@ -148,7 +134,7 @@ const { user, isAuthenticated, status, login } = useAuth();
 const form = reactive({
   identifier: '',
   password: '',
-  role: route.query.role === 'admin' ? 'admin' : route.query.role === 'parent' ? 'parent' : 'teacher',
+  role: 'teacher',
   remember: true,
 });
 
