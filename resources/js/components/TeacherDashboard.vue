@@ -4,8 +4,8 @@
       <div class="teacher__brand">
         <img class="teacher__logo" :src="assets.logo" alt="Logo Terminal Pintar" />
         <div class="teacher__brand-text">
-          <span class="teacher__brand-name">Terminal Pintar</span>
-          <span class="teacher__brand-sub">Dashboard Guru</span>
+          <span class="teacher__brand-name">{{ organizationName }}</span>
+          <span class="teacher__brand-sub">{{ roleLabel }}</span>
         </div>
       </div>
       <nav class="teacher__top-nav" aria-label="Navigasi utama guru">
@@ -36,7 +36,7 @@
           aria-controls="profile-panel"
           @click.stop="toggleProfile"
         >
-          <img :src="assets.avatar" alt="Profil Guru" />
+          <img :src="profileAvatar" :alt="`Profil ${profileName}`" />
         </button>
       </div>
 
@@ -74,10 +74,10 @@
           role="dialog"
           aria-label="Informasi profil guru"
         >
-          <img :src="assets.avatar" alt="Avatar Guru" />
-          <p class="teacher__profile-name">Ica Bali Tri Susmita</p>
-          <p class="teacher__profile-email">cabal@gmail.com</p>
-          <button type="button" class="teacher__logout">Keluar</button>
+          <img :src="profileAvatar" :alt="`Avatar ${profileName}`" />
+          <p class="teacher__profile-name">{{ profileName }}</p>
+          <p class="teacher__profile-email">{{ profileEmail }}</p>
+          <button type="button" class="teacher__logout" @click="handleLogout">Keluar</button>
         </section>
       </transition>
     </header>
@@ -115,9 +115,9 @@
         <section class="teacher__welcome">
           <div>
             <p class="teacher__welcome-eyebrow">Selamat Datang,</p>
-            <h1>Ibu Ica</h1>
+            <h1>{{ greetingName }}</h1>
             <p class="teacher__welcome-copy">
-              Kelola kegiatan belajar mengajar dan pantau performa siswa di Terminal Pintar.
+              Kelola kegiatan belajar mengajar dan pantau performa siswa di {{ organizationName }}.
             </p>
           </div>
           <div class="teacher__next-class">
@@ -205,6 +205,8 @@
 
 <script setup>
 import { computed, h, markRaw, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuth } from '../stores/auth';
 
 const createIcon = (...paths) =>
   markRaw({
@@ -223,8 +225,30 @@ const createIcon = (...paths) =>
 const assets = {
   logo: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92eee?auto=format&fit=crop&w=120&q=80',
   bell: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkE3QjM0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBhMiAyIDAgMCAwIDQtMiI+PC9wYXRoPjxwYXRoIGQ9Ik0zLjg2IDE3SDIwLjEzYTEgMSAwIDAwLjg3LTEuNTRBMTEuMDMgMTEuMDMgMCAwMDIwIDExYzAtNS41My00LjQ3LTEwLTEwLTEwUzkgNS40NyA5IDExYTExLjAzIDExLjAzIDAgMDAtNS4wMSA0LjQ2IDEgMSAwIDAwLjg3IDEuNTR6Ij48L3BhdGg+PC9zdmc+',
-  avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
+  avatarFallback: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
 };
+
+const router = useRouter();
+const { user, logout } = useAuth();
+
+const organizationName = computed(() => user.value?.organization ?? 'Terminal Pintar');
+const roleLabel = computed(() => {
+  switch (user.value?.role) {
+    case 'teacher':
+      return 'Dashboard Guru';
+    case 'admin':
+      return 'Dashboard Admin';
+    case 'parent':
+      return 'Dashboard Orang Tua';
+    default:
+      return 'Dashboard Pengguna';
+  }
+});
+
+const profileName = computed(() => user.value?.name ?? 'Pengguna Terminal Pintar');
+const profileEmail = computed(() => user.value?.email ?? 'guru@terminalpintar.id');
+const profileAvatar = computed(() => user.value?.avatar ?? assets.avatarFallback);
+const greetingName = computed(() => user.value?.shortName ?? user.value?.name ?? 'Guru Terminal Pintar');
 
 const notifications = [
   {
@@ -440,6 +464,12 @@ const toggleProfile = () => {
   }
 };
 
+const handleLogout = () => {
+  showProfile.value = false;
+  logout();
+  router.replace({ name: 'login' });
+};
+
 const handleClickOutside = (event) => {
   const elements = [
     notificationPanel.value,
@@ -460,15 +490,25 @@ const handleEscape = (event) => {
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  document.addEventListener('click', handleClickOutside);
-  document.addEventListener('keydown', handleEscape);
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+  }
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('click', handleClickOutside);
-  document.removeEventListener('keydown', handleEscape);
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleScroll);
+  }
+
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('keydown', handleEscape);
+  }
 });
 </script>
 
