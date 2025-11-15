@@ -4,6 +4,7 @@ import Login from '../components/Login.vue';
 import NewsList from '../components/NewsList.vue';
 import NewsDetail from '../components/NewsDetail.vue';
 import TeacherDashboard from '../components/TeacherDashboard.vue';
+import TeacherScheduleMaterials from '../components/TeacherScheduleMaterials.vue';
 import { getCurrentUser, isLoggedIn } from '../stores/auth';
 
 const routes = [
@@ -35,6 +36,15 @@ const routes = [
     path: '/guru/dashboard',
     name: 'teacher-dashboard',
     component: TeacherDashboard,
+    meta: {
+      requiresAuth: true,
+      roles: ['teacher'],
+    },
+  },
+  {
+    path: '/guru/jadwal-dan-materi',
+    name: 'teacher-schedule',
+    component: TeacherScheduleMaterials,
     meta: {
       requiresAuth: true,
       roles: ['teacher'],

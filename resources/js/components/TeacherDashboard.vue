@@ -87,25 +87,39 @@
         <div class="teacher__sidebar-section">
           <p class="teacher__sidebar-label">Menu Utama</p>
           <ul>
-            <li v-for="item in mainMenu" :key="item.label" class="teacher__sidebar-item" :class="{ 'teacher__sidebar-item--active': item.active }">
-              <span class="teacher__sidebar-icon" :style="{ background: item.accent }">
-                <component :is="item.icon"></component>
-              </span>
-              <span>{{ item.label }}</span>
+            <li
+              v-for="item in mainMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon" :style="{ background: item.accent }">
+                  <component :is="item.icon"></component>
+                </span>
+                <span>{{ item.label }}</span>
+              </button>
             </li>
           </ul>
         </div>
         <div class="teacher__sidebar-section">
           <p class="teacher__sidebar-label">Manajemen Akademik</p>
           <ul>
-            <li v-for="item in academicMenu" :key="item.label" class="teacher__sidebar-item">
-              <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
-                <component :is="item.icon"></component>
-              </span>
-              <div class="teacher__sidebar-text">
-                <span>{{ item.label }}</span>
-                <small>{{ item.subtitle }}</small>
-              </div>
+            <li
+              v-for="item in academicMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link teacher__sidebar-link--wide" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
+                  <component :is="item.icon"></component>
+                </span>
+                <div class="teacher__sidebar-text">
+                  <span>{{ item.label }}</span>
+                  <small>{{ item.subtitle }}</small>
+                </div>
+              </button>
             </li>
           </ul>
         </div>
@@ -165,7 +179,7 @@
                 <h3>{{ action.title }}</h3>
                 <p>{{ action.description }}</p>
               </div>
-              <button type="button">
+              <button type="button" @click="action.action && action.action()">
                 <span>{{ action.cta }}</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" /></svg>
               </button>
@@ -179,7 +193,7 @@
               <h2>Jadwal Pembelajaran</h2>
               <p>Tinjau sesi pekan ini dan status kehadiran siswa.</p>
             </div>
-            <button type="button">Kelola Jadwal</button>
+            <button type="button" @click="openScheduleManager('create-schedule')">Kelola Jadwal</button>
           </header>
           <ul>
             <li v-for="session in sessions" :key="session.id" class="teacher__session">
@@ -205,7 +219,7 @@
 
 <script setup>
 import { computed, h, markRaw, onBeforeUnmount, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuth } from '../stores/auth';
 
 const createIcon = (...paths) =>
@@ -229,6 +243,7 @@ const assets = {
 };
 
 const router = useRouter();
+const route = useRoute();
 const { user, logout } = useAuth();
 
 const organizationName = computed(() => user.value?.organization ?? 'Terminal Pintar');
@@ -265,32 +280,50 @@ const notifications = [
   },
 ];
 
-const mainMenu = [
-  {
-    label: 'Beranda',
-    accent: 'linear-gradient(135deg, rgba(118,179,64,0.85), rgba(99,144,57,0.75))',
-    icon: createIcon({ d: 'M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z', fill: 'currentColor' }),
-    active: true,
-  },
-];
+const heroAccent = (active) =>
+  active
+    ? 'linear-gradient(135deg, rgba(118,179,64,0.85), rgba(99,144,57,0.75))'
+    : 'linear-gradient(135deg, rgba(118,179,64,0.35), rgba(118,179,64,0.15))';
 
-const academicMenu = [
-  {
-    label: 'Jadwal & Materi',
-    subtitle: 'Atur pertemuan mingguan',
-    icon: createIcon({ d: 'M6 4h12a2 2 0 012 2v2H4V6a2 2 0 012-2zm14 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8zm-5 3h-6v2h6z', fill: 'currentColor' }),
-  },
-  {
-    label: 'Kehadiran',
-    subtitle: 'Rekap absensi kelas',
-    icon: createIcon({ d: 'M12 12a5 5 0 10-5-5 5 5 0 005 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z', fill: 'currentColor' }),
-  },
-  {
-    label: 'Penilaian',
-    subtitle: 'Input nilai & catatan',
-    icon: createIcon({ d: 'M4 3h16a1 1 0 011 1v13.59l-4-4a1 1 0 00-1.42 0L13 20H4a1 1 0 01-1-1V4a1 1 0 011-1zm5 6H7v2h2zm0-4H7v2h2zm8 0h-6v2h6zm0 4h-6v2h6z', fill: 'currentColor' }),
-  },
-];
+const mainMenu = computed(() => {
+  const isDashboard = route.name === 'teacher-dashboard';
+  return [
+    {
+      label: 'Beranda',
+      accent: heroAccent(isDashboard),
+      icon: createIcon({ d: 'M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z', fill: 'currentColor' }),
+      to: { name: 'teacher-dashboard' },
+      active: isDashboard,
+    },
+  ];
+});
+
+const academicMenu = computed(() => {
+  const isSchedule = route.name === 'teacher-schedule';
+  return [
+    {
+      label: 'Jadwal & Materi',
+      subtitle: 'Atur pertemuan mingguan',
+      icon: createIcon({ d: 'M6 4h12a2 2 0 012 2v2H4V6a2 2 0 012-2zm14 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8zm-5 3h-6v2h6z', fill: 'currentColor' }),
+      to: { name: 'teacher-schedule' },
+      active: isSchedule,
+    },
+    {
+      label: 'Kehadiran',
+      subtitle: 'Rekap absensi kelas',
+      icon: createIcon({ d: 'M12 12a5 5 0 10-5-5 5 5 0 005 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z', fill: 'currentColor' }),
+      to: null,
+      active: false,
+    },
+    {
+      label: 'Penilaian',
+      subtitle: 'Input nilai & catatan',
+      icon: createIcon({ d: 'M4 3h16a1 1 0 011 1v13.59l-4-4a1 1 0 00-1.42 0L13 20H4a1 1 0 01-1-1V4a1 1 0 011-1zm5 6H7v2h2zm0-4H7v2h2zm8 0h-6v2h6zm0 4h-6v2h6z', fill: 'currentColor' }),
+      to: null,
+      active: false,
+    },
+  ];
+});
 
 const summaryCards = computed(() => [
   {
@@ -327,7 +360,11 @@ const summaryCards = computed(() => [
   },
 ]);
 
-const quickActions = [
+const openScheduleManager = (modal) => {
+  router.push({ name: 'teacher-schedule', query: modal ? { modal } : {} });
+};
+
+const quickActions = computed(() => [
   {
     title: 'Buat Sesi Baru',
     description: 'Tambahkan jadwal dan sesi baru untuk kelas Anda.',
@@ -341,6 +378,7 @@ const quickActions = [
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
     }),
+    action: () => openScheduleManager('create-schedule'),
   },
   {
     title: 'Upload Materi',
@@ -355,6 +393,7 @@ const quickActions = [
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
     }),
+    action: () => openScheduleManager('create-material'),
   },
   {
     title: 'Laporan Kehadiran',
@@ -362,6 +401,7 @@ const quickActions = [
     cta: 'Lihat',
     accent: 'rgba(255,193,7,0.18)',
     icon: createIcon({ d: 'M5 3h14a2 2 0 012 2v14l-4-3-4 3-4-3-4 3V5a2 2 0 012-2z', fill: 'currentColor' }),
+    action: null,
   },
   {
     title: 'Riwayat Penilaian',
@@ -386,8 +426,19 @@ const quickActions = [
         'stroke-linejoin': 'round',
       },
     ),
+    action: null,
   },
-];
+]);
+
+const handleSidebarClick = (item) => {
+  if (!item?.to) {
+    return;
+  }
+  if (item.to.name === route.name && !item.to.query) {
+    return;
+  }
+  router.push(item.to);
+};
 
 const sessions = [
   {
@@ -805,24 +856,38 @@ onBeforeUnmount(() => {
 }
 
 .teacher__sidebar-item {
+  margin: 0;
+}
+
+.teacher__sidebar-link {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  padding: 0.7rem 0.85rem;
   border-radius: 16px;
+  border: 1px solid rgba(118, 179, 64, 0.12);
+  background: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   color: rgba(31, 31, 31, 0.75);
-  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.teacher__sidebar-item--active {
-  background: rgba(118, 179, 64, 0.15);
+.teacher__sidebar-link--wide {
+  align-items: flex-start;
+}
+
+.teacher__sidebar-item--active .teacher__sidebar-link {
+  background: rgba(118, 179, 64, 0.18);
+  border-color: rgba(118, 179, 64, 0.28);
   color: #4a7c2c;
 }
 
-.teacher__sidebar-item:hover {
+.teacher__sidebar-link:hover {
   transform: translateX(4px);
-  background: rgba(118, 179, 64, 0.1);
+  box-shadow: 0 12px 30px -28px rgba(74, 124, 44, 0.5);
 }
 
 .teacher__sidebar-icon {
