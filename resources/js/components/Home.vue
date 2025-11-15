@@ -1,6 +1,6 @@
 <template>
   <main class="home" id="beranda">
-    <header class="home__navigation" role="banner">
+    <header :class="['home__navigation', { 'home__navigation--glass': isScrolled }]" role="banner">
       <div class="home__branding">
         <img class="home__logo" :src="assets.logo" alt="Logo Terminal Pintar" />
         <span class="home__brand-name">Terminal Pintar</span>
@@ -183,7 +183,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { newsItems } from '../data/news';
 
@@ -257,6 +257,30 @@ const team = [
   },
 ];
 
+const isScrolled = ref(false);
+
+const evaluateScrollState = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 24;
+};
+
+onMounted(() => {
+  evaluateScrollState();
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', evaluateScrollState, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', evaluateScrollState);
+  }
+});
+
 const scrollTo = (id) => {
   const target = document.getElementById(id);
 
@@ -286,16 +310,25 @@ const scrollTo = (id) => {
 
 .home__navigation {
   align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(202, 196, 208, 0.55);
-  box-shadow: 0 12px 28px rgba(25, 39, 58, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(202, 196, 208, 0.45);
+  box-shadow: 0 10px 24px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
-  padding: 1.1rem 2.8rem;
+  padding: 1.05rem 2.8rem;
   position: sticky;
   top: 0;
-  z-index: 10;
+  transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+  z-index: 24;
+}
+
+.home__navigation--glass {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 45px rgba(21, 35, 54, 0.18);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
 .home__branding {
@@ -508,20 +541,44 @@ const scrollTo = (id) => {
 }
 
 .home__activity-card {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(21, 62, 19, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 22px;
+  box-shadow: 0 24px 48px rgba(21, 62, 19, 0.14);
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
+  overflow: hidden;
   padding: 1.75rem;
   position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+}
+
+.home__activity-card::after {
+  background: linear-gradient(135deg, rgba(120, 174, 78, 0.12), rgba(76, 138, 19, 0.08));
+  content: '';
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.home__activity-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .home__activity-card:hover {
-  box-shadow: 0 24px 45px rgba(21, 62, 19, 0.18);
-  transform: translateY(-6px);
+  border-color: rgba(120, 174, 78, 0.4);
+  box-shadow: 0 32px 60px rgba(21, 62, 19, 0.22);
+  transform: translateY(-8px);
+}
+
+.home__activity-card:hover::after {
+  opacity: 1;
 }
 
 .home__activity-header {
@@ -716,13 +773,44 @@ const scrollTo = (id) => {
 }
 
 .home__contribution-card {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(48, 67, 104, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 22px;
+  box-shadow: 0 26px 50px rgba(35, 57, 92, 0.16);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 2rem;
+  padding: 2.2rem;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+.home__contribution-card::before {
+  border-radius: inherit;
+  content: '';
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: linear-gradient(135deg, rgba(120, 174, 78, 0.12), rgba(72, 137, 33, 0.18));
+}
+
+.home__contribution-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home__contribution-card:hover {
+  border-color: rgba(120, 174, 78, 0.35);
+  box-shadow: 0 34px 65px rgba(35, 57, 92, 0.22);
+  transform: translateY(-8px);
+}
+
+.home__contribution-card:hover::before {
+  opacity: 1;
 }
 
 .home__contribution-card img {
@@ -759,6 +847,10 @@ const scrollTo = (id) => {
 .home__contribution-card button:hover {
   box-shadow: 0 18px 30px rgba(72, 137, 33, 0.28);
   transform: translateY(-2px);
+}
+
+.home__contribution-card--accent::before {
+  background: linear-gradient(135deg, rgba(255, 157, 66, 0.12), rgba(255, 123, 44, 0.18));
 }
 
 .home__contribution-card--accent button {
@@ -809,6 +901,7 @@ const scrollTo = (id) => {
   display: inline-flex;
   height: 58px;
   justify-content: center;
+  align-self: end;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
   width: 58px;
