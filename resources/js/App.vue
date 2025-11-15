@@ -3,6 +3,14 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { useAuth } from './stores/auth';
+
+const { hydrate } = useAuth();
+
+onMounted(() => {
+  hydrate();
+});
 </script>
 
 <style>
