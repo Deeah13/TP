@@ -81,10 +81,7 @@
             Dukungan masyarakat membuat program literasi, teknologi, hingga seni terus berkembang sampai hari ini.
           </p>
           <img :src="assets.history" alt="Pendiri Terminal Pintar" loading="lazy" />
-          <footer>
-            <span class="home__about-name">Andi Mohan</span>
-            <span class="home__about-role">Pendiri Terminal Pintar</span>
-          </footer>
+         
         </article>
         <article class="home__about-card">
           <h3>Visi</h3>
@@ -93,10 +90,7 @@
             harapan melalui pengalaman belajar yang relevan, menyenangkan, dan penuh empati.
           </p>
           <img :src="assets.vision" alt="Ilustrasi visi Terminal Pintar" loading="lazy" />
-          <footer>
-            <span class="home__about-name">Tim Terminal Pintar</span>
-            <span class="home__about-role">Kolaborasi Pengajar &amp; Relawan</span>
-          </footer>
+         
         </article>
       </div>
       <div class="home__team">
