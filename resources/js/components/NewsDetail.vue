@@ -1,10 +1,6 @@
 <template>
   <div class="detail" id="top">
-    <header
-      v-if="article"
-      :class="['detail__navigation', { 'detail__navigation--glass': isScrolled }]"
-      role="banner"
-    >
+    <header v-if="article" class="detail__navigation" role="banner">
       <RouterLink class="detail__brand" :to="{ name: 'home' }" aria-label="Kembali ke beranda">
         <img :src="assets.logo" alt="Logo Terminal Pintar" />
         <div>
@@ -86,7 +82,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { newsMap } from '../data/news';
 
@@ -120,16 +116,6 @@ const socialIcon = (label) => {
 };
 
 const article = computed(() => newsMap[route.params.slug]);
-
-const isScrolled = ref(false);
-
-const evaluateScrollState = () => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  isScrolled.value = window.scrollY > 24;
-};
 
 const updateMetadata = (item) => {
   if (typeof document === 'undefined') {
@@ -174,20 +160,7 @@ const scrollTo = (id) => {
   }
 };
 
-onMounted(() => {
-  ensureArticleOrRedirect();
-  evaluateScrollState();
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('scroll', evaluateScrollState, { passive: true });
-  }
-});
-
-onBeforeUnmount(() => {
-  if (typeof window !== 'undefined') {
-    window.removeEventListener('scroll', evaluateScrollState);
-  }
-});
+onMounted(ensureArticleOrRedirect);
 
 watch(
   () => route.params.slug,
@@ -211,25 +184,16 @@ watch(
 
 .detail__navigation {
   align-items: center;
-  background: rgba(255, 255, 255, 0.98);
-  border-bottom: 1px solid rgba(202, 196, 208, 0.45);
-  box-shadow: 0 12px 26px rgba(25, 39, 58, 0.08);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(202, 196, 208, 0.55);
+  box-shadow: 0 12px 28px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
   padding: 1.2rem 2.75rem;
   position: sticky;
   top: 0;
-  transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
-  z-index: 24;
-}
-
-.detail__navigation--glass {
-  background: rgba(255, 255, 255, 0.72);
-  border-bottom-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 22px 48px rgba(21, 35, 54, 0.18);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  z-index: 12;
 }
 
 .detail__brand {
@@ -432,8 +396,6 @@ watch(
   height: 56px;
   justify-content: center;
   margin-top: 2.5rem;
-  margin-left: auto;
-  align-self: flex-end;
   padding: 0;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 56px;
@@ -509,8 +471,6 @@ watch(
   display: inline-flex;
   height: 56px;
   justify-content: center;
-  align-self: end;
-  justify-self: end;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
   width: 56px;
