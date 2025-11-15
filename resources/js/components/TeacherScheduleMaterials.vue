@@ -123,6 +123,27 @@
             </li>
           </ul>
         </div>
+        <div class="schedule__sidebar-section">
+          <p class="schedule__sidebar-label">Kehadiran</p>
+          <ul>
+            <li
+              v-for="item in attendanceMenu"
+              :key="item.label"
+              class="schedule__sidebar-item"
+              :class="{ 'schedule__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="schedule__sidebar-link schedule__sidebar-link--wide" @click="handleSidebarClick(item)">
+                <span class="schedule__sidebar-icon schedule__sidebar-icon--outline">
+                  <component :is="item.icon"></component>
+                </span>
+                <div class="schedule__sidebar-text">
+                  <span>{{ item.label }}</span>
+                  <small>{{ item.subtitle }}</small>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
       </aside>
 
       <main class="schedule__main" role="main">
@@ -222,22 +243,9 @@
             <div class="schedule-card__actions">
               <button type="button" @click="openModal('edit-schedule', session.id)">Edit Jadwal</button>
               <button type="button" @click="openModal('edit-material', session.id)">Kelola Materi</button>
-              <button type="button" class="schedule-card__actions--ghost">Catatan</button>
+              <button type="button" class="schedule-card__actions--ghost" @click="goToAttendance(session)">Catatan</button>
             </div>
           </article>
-        </section>
-
-        <section class="schedule__feedback" aria-label="Riwayat feedback sistem">
-          <h2>Feedback Aktivitas</h2>
-          <div class="schedule__feedback-grid">
-            <article v-for="toast in feedback" :key="toast.id" class="schedule-feedback">
-              <span class="schedule-feedback__icon">✓</span>
-              <div>
-                <p class="schedule-feedback__title">{{ toast.title }}</p>
-                <p class="schedule-feedback__subtitle">{{ toast.subtitle }}</p>
-              </div>
-            </article>
-          </div>
         </section>
       </main>
     </div>
@@ -251,7 +259,7 @@
             <p>{{ modalSubtitle }}</p>
           </header>
 
-          <form v-if="activeModal === 'create-schedule'" class="schedule-form" @submit.prevent>
+          <form v-if="activeModal === 'create-schedule'" class="schedule-form" @submit.prevent="handleSubmit('create-schedule')">
             <label>
               <span>Mata Pelajaran</span>
               <input type="text" placeholder="Masukkan nama Mata Pelajaran - Kegiatan" />
@@ -296,7 +304,7 @@
             </footer>
           </form>
 
-          <form v-else-if="activeModal === 'edit-schedule'" class="schedule-form" @submit.prevent>
+          <form v-else-if="activeModal === 'edit-schedule'" class="schedule-form" @submit.prevent="handleSubmit('edit-schedule')">
             <label>
               <span>Mata Pelajaran</span>
               <input type="text" :value="activeSchedule?.subject" />
@@ -341,7 +349,7 @@
             </footer>
           </form>
 
-          <form v-else-if="activeModal === 'create-material'" class="schedule-form" @submit.prevent>
+          <form v-else-if="activeModal === 'create-material'" class="schedule-form" @submit.prevent="handleSubmit('create-material')">
             <label>
               <span>Judul Materi</span>
               <input type="text" placeholder="Masukkan judul materi baru" />
@@ -360,7 +368,7 @@
             </footer>
           </form>
 
-          <form v-else-if="activeModal === 'edit-material'" class="schedule-form" @submit.prevent>
+          <form v-else-if="activeModal === 'edit-material'" class="schedule-form" @submit.prevent="handleSubmit('edit-material')">
             <label>
               <span>Judul Materi</span>
               <input type="text" :value="activeSchedule?.topic" />
@@ -390,6 +398,17 @@
         </div>
       </section>
     </transition>
+  </div>
+    <transition-group name="schedule-toast" tag="ol" class="schedule__toasts" aria-live="polite" aria-atomic="true">
+      <li v-for="toast in toasts" :key="toast.id" class="schedule-toast">
+        <span class="schedule-toast__icon">✓</span>
+        <div>
+          <p class="schedule-toast__title">{{ toast.title }}</p>
+          <p class="schedule-toast__subtitle">{{ toast.subtitle }}</p>
+        </div>
+        <button type="button" class="schedule-toast__close" aria-label="Tutup notifikasi" @click="dismissToast(toast.id)">×</button>
+      </li>
+    </transition-group>
   </div>
 </template>
 
@@ -466,19 +485,15 @@ const academicMenu = computed(() => [
     to: { name: 'teacher-schedule' },
     active: route.name === 'teacher-schedule',
   },
+]);
+
+const attendanceMenu = computed(() => [
   {
     label: 'Kehadiran',
-    subtitle: 'Rekap absensi kelas',
-    icon: createIcon({ d: 'M12 12a5 5 0 10-5-5 5 5 0 005 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z', fill: 'currentColor' }),
-    to: null,
-    active: false,
-  },
-  {
-    label: 'Penilaian',
-    subtitle: 'Input nilai & catatan',
-    icon: createIcon({ d: 'M4 3h16a1 1 0 011 1v13.59l-4-4a1 1 0 00-1.42 0L13 20H4a1 1 0 01-1-1V4a1 1 0 011-1zm5 6H7v2h2zm0-4H7v2h2zm8 0h-6v2h6zm0 4h-6v2h6z', fill: 'currentColor' }),
-    to: null,
-    active: false,
+    subtitle: 'Rekap absensi & catatan',
+    icon: createIcon({ d: 'M4 6h16a1 1 0 011 1v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7a1 1 0 011-1zm5 3v2h6V9zm0 4v2h4v-2z', fill: 'currentColor' }),
+    to: { name: 'teacher-attendance' },
+    active: route.name === 'teacher-attendance',
   },
 ]);
 
@@ -549,14 +564,27 @@ const schedules = ref([
   },
 ]);
 
-const feedback = [
-  { id: 'feedback-1', title: 'Jadwal Berhasil Ditambahkan', subtitle: '15 Oktober 2025 • Matematika' },
-  { id: 'feedback-2', title: 'Materi Berhasil Ditambahkan', subtitle: '17 Oktober 2025 • 2 dokumen' },
-  { id: 'feedback-3', title: 'Catatan Berhasil Ditambahkan', subtitle: 'Bahasa Indonesia • 5 menit lalu' },
-  { id: 'feedback-4', title: 'Jadwal Berhasil Diedit', subtitle: 'Perubahan tersimpan otomatis' },
-  { id: 'feedback-5', title: 'Materi Berhasil Diedit', subtitle: 'Pembaruan file materi puisi' },
-  { id: 'feedback-6', title: 'Catatan Berhasil Diperbarui', subtitle: 'Catatan siswa kelas 9A' },
-];
+const toasts = ref([]);
+const toastTimers = new Map();
+
+const pushToast = ({ title, subtitle }) => {
+  const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  toasts.value.push({ id, title, subtitle });
+
+  if (typeof window !== 'undefined') {
+    const timer = window.setTimeout(() => dismissToast(id), 4200);
+    toastTimers.set(id, timer);
+  }
+};
+
+const dismissToast = (id) => {
+  const timer = toastTimers.get(id);
+  if (timer) {
+    clearTimeout(timer);
+    toastTimers.delete(id);
+  }
+  toasts.value = toasts.value.filter((toast) => toast.id !== id);
+};
 
 const fileTypeIcons = {
   pdf: createIcon(
@@ -579,6 +607,25 @@ const modals = reactive({
 
 const activeModal = ref(null);
 const activeSchedule = ref(null);
+
+const scheduleToastCopy = {
+  'create-schedule': () => ({
+    title: 'Jadwal Berhasil Ditambahkan',
+    subtitle: 'Jadwal baru siap dibagikan ke siswa.',
+  }),
+  'edit-schedule': () => ({
+    title: 'Jadwal Berhasil Diperbarui',
+    subtitle: `${activeSchedule.value?.subject ?? 'Jadwal terpilih'} telah disesuaikan.`,
+  }),
+  'create-material': () => ({
+    title: 'Materi Berhasil Ditambahkan',
+    subtitle: `${activeSchedule.value?.subject ?? 'Materi baru'} siap dibagikan.`,
+  }),
+  'edit-material': () => ({
+    title: 'Materi Berhasil Diperbarui',
+    subtitle: `${activeSchedule.value?.subject ?? 'Materi terpilih'} telah diperbarui.`,
+  }),
+};
 
 const isAnyModalOpen = computed(() => Object.values(modals).some(Boolean));
 
@@ -629,9 +676,13 @@ const openModal = (modal, scheduleId = null, syncRoute = true) => {
   });
 
   activeModal.value = modal;
-  activeSchedule.value = scheduleId
-    ? schedules.value.find((session) => session.id === scheduleId) ?? schedules.value[0]
-    : null;
+  if (scheduleId) {
+    activeSchedule.value = schedules.value.find((session) => session.id === scheduleId) ?? schedules.value[0] ?? null;
+  } else if (modal !== 'create-schedule') {
+    activeSchedule.value = schedules.value[0] ?? null;
+  } else {
+    activeSchedule.value = null;
+  }
 
   if (syncRoute) {
     updateRouteModal(modal, scheduleId);
@@ -648,6 +699,18 @@ const closeModals = (syncRoute = true) => {
   if (syncRoute) {
     updateRouteModal(null, null);
   }
+};
+
+const handleSubmit = (type) => {
+  const factory = scheduleToastCopy[type];
+  if (!factory) {
+    closeModals();
+    return;
+  }
+
+  const payload = factory();
+  pushToast(payload);
+  closeModals();
 };
 
 watch(
@@ -667,6 +730,17 @@ const handleSidebarClick = (item) => {
   if (!item?.to) return;
   if (item.to.name === route.name && !item.to.query) return;
   router.push(item.to);
+};
+
+const goToAttendance = (session) => {
+  router.push({
+    name: 'teacher-attendance',
+    query: {
+      from: 'schedule',
+      focus: 'notes',
+      session: session?.id,
+    },
+  });
 };
 
 const isScrolled = ref(false);
@@ -752,6 +826,9 @@ onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
     document.removeEventListener('keydown', handleEscape);
   }
+
+  toastTimers.forEach((timer) => clearTimeout(timer));
+  toastTimers.clear();
 });
 </script>
 
@@ -760,7 +837,7 @@ onBeforeUnmount(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, #f6f9ff 0%, #fef7ff 55%, #f3fbf0 100%);
+  background: linear-gradient(160deg, #fef7ff 0%, #f9fff4 55%, #f3fbf0 100%);
   color: #1f1f1f;
   transition: background 0.4s ease;
 }
@@ -807,7 +884,7 @@ onBeforeUnmount(() => {
 .schedule__brand-name {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #1f1f1f;
+  color: #76b340;
 }
 
 .schedule__brand-sub {
@@ -1459,54 +1536,62 @@ onBeforeUnmount(() => {
   color: rgba(31, 31, 31, 0.75);
 }
 
-.schedule__feedback {
-  background: rgba(255, 255, 255, 0.82);
-  border-radius: 24px;
-  border: 1px solid rgba(118, 179, 64, 0.16);
-  padding: 1.8rem 2rem;
-  box-shadow: 0 30px 70px -52px rgba(57, 70, 62, 0.55);
-}
-
-.schedule__feedback h2 {
-  margin: 0 0 1.25rem;
-}
-
-.schedule__feedback-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.schedule-feedback {
-  background: rgba(118, 179, 64, 0.12);
-  border: 1px solid rgba(118, 179, 64, 0.22);
-  border-radius: 16px;
-  padding: 1rem 1.1rem;
+.schedule__toasts {
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-  align-items: flex-start;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 25;
 }
 
-.schedule-feedback__icon {
+.schedule-toast {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.95rem 1.15rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(118, 179, 64, 0.22);
+  box-shadow: 0 20px 45px -30px rgba(57, 70, 62, 0.4);
+}
+
+.schedule-toast__icon {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
-  background: rgba(74, 124, 44, 0.9);
-  color: #fff;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(118, 179, 64, 0.16);
+  color: #4a7c2c;
   font-weight: 700;
 }
 
-.schedule-feedback__title {
+.schedule-toast__title {
   margin: 0;
   font-weight: 600;
+  color: #1f1f1f;
 }
 
-.schedule-feedback__subtitle {
+.schedule-toast__subtitle {
   margin: 0.2rem 0 0;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: rgba(31, 31, 31, 0.6);
+}
+
+.schedule-toast__close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: rgba(31, 31, 31, 0.45);
+  cursor: pointer;
 }
 
 .schedule-modal {
@@ -1667,6 +1752,17 @@ onBeforeUnmount(() => {
 .schedule-modal-enter-from,
 .schedule-modal-leave-to {
   opacity: 0;
+}
+
+.schedule-toast-enter-active,
+.schedule-toast-leave-active {
+  transition: all 0.3s ease;
+}
+
+.schedule-toast-enter-from,
+.schedule-toast-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
 }
 
 @media (max-width: 1200px) {

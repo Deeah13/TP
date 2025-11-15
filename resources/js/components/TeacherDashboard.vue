@@ -123,6 +123,27 @@
             </li>
           </ul>
         </div>
+        <div class="teacher__sidebar-section">
+          <p class="teacher__sidebar-label">Kehadiran</p>
+          <ul>
+            <li
+              v-for="item in attendanceMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link teacher__sidebar-link--wide" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
+                  <component :is="item.icon"></component>
+                </span>
+                <div class="teacher__sidebar-text">
+                  <span>{{ item.label }}</span>
+                  <small>{{ item.subtitle }}</small>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
       </aside>
 
       <main class="teacher__main" role="main">
@@ -308,19 +329,18 @@ const academicMenu = computed(() => {
       to: { name: 'teacher-schedule' },
       active: isSchedule,
     },
+  ];
+});
+
+const attendanceMenu = computed(() => {
+  const isAttendance = route.name === 'teacher-attendance';
+  return [
     {
       label: 'Kehadiran',
-      subtitle: 'Rekap absensi kelas',
-      icon: createIcon({ d: 'M12 12a5 5 0 10-5-5 5 5 0 005 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z', fill: 'currentColor' }),
-      to: null,
-      active: false,
-    },
-    {
-      label: 'Penilaian',
-      subtitle: 'Input nilai & catatan',
-      icon: createIcon({ d: 'M4 3h16a1 1 0 011 1v13.59l-4-4a1 1 0 00-1.42 0L13 20H4a1 1 0 01-1-1V4a1 1 0 011-1zm5 6H7v2h2zm0-4H7v2h2zm8 0h-6v2h6zm0 4h-6v2h6z', fill: 'currentColor' }),
-      to: null,
-      active: false,
+      subtitle: 'Rekap absensi & catatan',
+      icon: createIcon({ d: 'M4 6h16a1 1 0 011 1v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7a1 1 0 011-1zm5 3v2h6V9zm0 4v2h4v-2z', fill: 'currentColor' }),
+      to: { name: 'teacher-attendance' },
+      active: isAttendance,
     },
   ];
 });
@@ -401,32 +421,15 @@ const quickActions = computed(() => [
     cta: 'Lihat',
     accent: 'rgba(255,193,7,0.18)',
     icon: createIcon({ d: 'M5 3h14a2 2 0 012 2v14l-4-3-4 3-4-3-4 3V5a2 2 0 012-2z', fill: 'currentColor' }),
-    action: null,
+    action: () => router.push({ name: 'teacher-attendance' }),
   },
   {
-    title: 'Riwayat Penilaian',
-    description: 'Tampilkan penilaian guru terhadap siswa secara ringkas.',
-    cta: 'Tinjau',
+    title: 'Catat Perkembangan',
+    description: 'Segera isi catatan perkembangan siswa selama pembelajaran.',
+    cta: 'Catat',
     accent: 'rgba(244,143,177,0.18)',
-    icon: createIcon(
-      {
-        d: 'M9 11l3 3L22 4',
-        fill: 'none',
-        stroke: 'currentColor',
-        'stroke-width': '2',
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-      },
-      {
-        d: 'M2 20h20',
-        fill: 'none',
-        stroke: 'currentColor',
-        'stroke-width': '2',
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-      },
-    ),
-    action: null,
+    icon: createIcon({ d: 'M5 5h14v14H5z', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+    action: () => router.push({ name: 'teacher-attendance', query: { focus: 'notes' } }),
   },
 ]);
 
