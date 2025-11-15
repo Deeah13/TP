@@ -161,6 +161,32 @@ const formError = ref('');
 const isSubmitting = computed(() => status.value === 'loading');
 const identifierRef = ref(null);
 
+const extractFirstError = (value) => {
+  if (!value) {
+    return '';
+  }
+
+  if (Array.isArray(value)) {
+    const message = value.find((item) => typeof item === 'string' && item.trim() !== '');
+    return message ?? '';
+  }
+
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  return '';
+};
+
+const applyServerErrors = (fieldErrors) => {
+  if (!fieldErrors || typeof fieldErrors !== 'object') {
+    return;
+  }
+
+  errors.identifier = extractFirstError(fieldErrors.identifier);
+  errors.password = extractFirstError(fieldErrors.password);
+};
+
 const defaultRedirect = computed(() => {
   if (route.query.redirect) {
     return String(route.query.redirect);
@@ -201,6 +227,7 @@ const handleSubmit = async () => {
 
     router.replace(defaultRedirect.value);
   } catch (error) {
+    applyServerErrors(error?.fieldErrors);
     formError.value = error?.message || 'Terjadi kesalahan saat memproses permintaan Anda.';
     focusFirstError();
   }

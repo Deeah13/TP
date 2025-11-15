@@ -94,6 +94,10 @@ async function fetchProfile() {
 }
 
 function extractErrorMessage(error) {
+  if (error?.response?.status === 429) {
+    return 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam beberapa saat.';
+  }
+
   if (error?.response?.data) {
     const data = error.response.data;
 
@@ -145,7 +149,18 @@ export function useAuth() {
       return authenticatedUser;
     } catch (error) {
       statusState.value = 'error';
-      throw new Error(extractErrorMessage(error));
+      const message = extractErrorMessage(error);
+      const authError = new Error(message);
+
+      if (error?.response?.data?.errors && typeof error.response.data.errors === 'object') {
+        authError.fieldErrors = error.response.data.errors;
+      }
+
+      if (error?.response?.status) {
+        authError.statusCode = error.response.status;
+      }
+
+      throw authError;
     }
   };
 
