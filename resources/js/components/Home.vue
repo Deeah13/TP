@@ -1,195 +1,190 @@
 <template>
-  <main class="HOME" id="beranda">
-    <header class="navigation" role="banner">
-      <img class="logo-terminal-pintar" :src="assets.logo" alt="Logo Terminal Pintar" />
-      <h1 class="text-wrapper-18">Terminal Pintar</h1>
-      <nav class="frame-2" aria-label="Navigasi Utama">
-        <a href="#kegiatan" class="text-wrapper-22" @click.prevent="scrollTo('kegiatan')">Kegiatan</a>
+  <main class="home" id="beranda">
+    <header class="home__navigation" role="banner">
+      <div class="home__branding">
+        <img class="home__logo" :src="assets.logo" alt="Logo Terminal Pintar" />
+        <span class="home__brand-name">Terminal Pintar</span>
+      </div>
+      <nav class="home__menu" aria-label="Navigasi Utama">
+        <a href="#kegiatan" class="home__menu-link" @click.prevent="scrollTo('kegiatan')">Kegiatan</a>
+        <a href="#tentang-kami" class="home__menu-link" @click.prevent="scrollTo('tentang-kami')">Tentang Kami</a>
+        <a href="#kontak" class="home__menu-link" @click.prevent="scrollTo('kontak')">Kontak</a>
       </nav>
-      <a href="#tentang-kami" class="text-wrapper-20" @click.prevent="scrollTo('tentang-kami')">Tentang Kami</a>
-      <a href="#kontak" class="text-wrapper-21" @click.prevent="scrollTo('kontak')">Kontak</a>
-      <button class="bell" type="button" aria-label="Notifikasi">
-        <span aria-hidden="true">🔔</span>
-      </button>
-      <a class="button" href="/login">
-        <span class="text-wrapper-19">Login</span>
-      </a>
+      <div class="home__actions">
+        <button class="home__icon-button" type="button" aria-label="Notifikasi">
+          <img :src="assets.bell" alt="" aria-hidden="true" />
+        </button>
+        <a class="home__login" href="/login">Login</a>
+      </div>
     </header>
 
-    <section class="hero-section">
-      <img
-        class="a-importncia-do"
-        :src="assets.hero"
-        alt="Anak-anak belajar bersama di Terminal Pintar"
-      />
-      <div class="hero-content">
-        <h2 class="text-wrapper-23">Halo, Selamat Datang di Terminal Pintar!</h2>
-        <p class="text-wrapper-26">
+    <section class="home__hero" aria-labelledby="hero-title">
+      <figure class="home__hero-media" aria-hidden="true">
+        <img :src="assets.hero" alt="Anak-anak belajar bersama" loading="lazy" />
+      </figure>
+      <div class="home__hero-overlay"></div>
+      <div class="home__hero-content">
+        <p class="home__hero-eyebrow">Ruang Belajar dan Harapan</p>
+        <h2 id="hero-title" class="home__hero-title">Halo, Selamat Datang di Terminal Pintar!</h2>
+        <p class="home__hero-description">
           Mari bergabung bersama kami untuk belajar, berbagi inspirasi, menjadi relawan, atau berdonasi demi mendukung
           masa depan yang lebih baik.
         </p>
-        <button class="cart-button-4" type="button" @click="scrollTo('kegiatan')">
-          <span class="text-wrapper-31">Jelajah lebih lanjut</span>
-        </button>
+        <RouterLink class="home__hero-cta" role="button" :to="{ name: 'news' }">Jelajah lebih lanjut</RouterLink>
       </div>
     </section>
 
-    <section id="kegiatan" class="activities-section">
-      <h2 class="text-wrapper-24">Dokumentasi Kegiatan Terbaru Kami</h2>
-
-      <article
-        v-for="(activity, index) in activities"
-        :key="activity.slug"
-        :class="activity.cardClass"
-      >
-        <img class="buket" :src="activity.image" :alt="activity.title" />
-        <h3 class="text-wrapper-27">{{ activity.title }}</h3>
-        <time class="text-wrapper-28" :datetime="activity.isoDate">{{ activity.date }}</time>
-        <p :class="activity.copyClass">{{ activity.description }}</p>
-        <RouterLink
-          :class="activity.ctaClass"
-          role="button"
-          :to="{ name: 'news-detail', params: { slug: activity.slug } }"
-        >
-          <span class="text-wrapper-2">Baca Selengkapnya</span>
-        </RouterLink>
-      </article>
-
-      <RouterLink class="cart-button-3" :to="{ name: 'news' }" role="button">
-        <span class="text-wrapper-30">Lihat Semua Kegiatan</span>
-      </RouterLink>
+    <section id="kegiatan" class="home__activities" aria-labelledby="activities-title">
+      <div class="home__section-heading">
+        <h2 id="activities-title">Dokumentasi Kegiatan Terbaru Kami</h2>
+        <p>Ikuti cerita terbaru dari kelas, lokakarya, dan program komunitas Terminal Pintar.</p>
+      </div>
+      <div class="home__activities-grid">
+        <article v-for="activity in activities" :key="activity.slug" class="home__activity-card">
+          <div class="home__activity-header">
+            <span class="home__activity-badge">
+              <img :src="activity.badge" alt="" aria-hidden="true" />
+            </span>
+            <time class="home__activity-date" :datetime="activity.isoDate">{{ activity.date }}</time>
+          </div>
+          <img class="home__activity-image" :src="activity.image" :alt="activity.title" loading="lazy" />
+          <h3 class="home__activity-title">{{ activity.title }}</h3>
+          <p class="home__activity-copy">{{ activity.description }}</p>
+          <RouterLink class="home__activity-link" :to="{ name: 'news-detail', params: { slug: activity.slug } }">
+            Baca Selengkapnya
+            <svg class="home__activity-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              />
+            </svg>
+          </RouterLink>
+        </article>
+      </div>
+      <RouterLink class="home__activities-cta" :to="{ name: 'news' }">Lihat Semua Kegiatan</RouterLink>
     </section>
 
-    <section id="tentang-kami" class="frame">
-      <h2 class="text-wrapper-12">Tentang Kami</h2>
-      <img class="line" :src="assets.divider" alt="" role="presentation" />
-
-      <article class="tomato-3">
-        <h3 class="text-wrapper-8">SEJARAH</h3>
-        <p class="p">
-          Dibangun pada tanggal 17 Agustus 1502 berdasarkan perintah Kaisar dari Dinasti Ming. Pendiri diberikan
-          kewenangan untuk mengurus komunitas dengan bantuan penuh dari Kaisar dan kemudian komunitas ini makin
-          membesar dan terkenal di masyarakat umum. Beberapa tahun setelahnya, banyak relawan yang ikut meramaikan
-          komunitas ini dan memberi bantuan yang sangat berarti untuk mencerdasakan kehidupan bangsa.
-        </p>
-        <img class="download-donation-3" :src="assets.history" alt="Pendiri Terminal Pintar" />
-        <p class="text-wrapper-6">Andi Mohan</p>
-        <p class="text-wrapper-7">Pendiri Terminal Pintar</p>
-      </article>
-
-      <article class="tomato-4">
-        <h3 class="text-wrapper-9">VISI</h3>
-        <p class="text-wrapper-10">
-          Visi yang diusung adalah menjadikan Terminal Pintar sebagai "teman perjalanan" bagi anak-anak untuk
-          menemukan kembali arti rumah, pendidikan, dan harapan. Artinya, tempat ini tidak dimaksudkan menggantikan
-          sekolah formal, melainkan melengkapi dengan nuansa yang lebih hangat, menyenangkan, dan relevan dengan
-          kehidupan mereka.
-        </p>
-        <img class="img" :src="assets.vision" alt="Ilustrasi visi Terminal Pintar" />
-        <p class="text-wrapper-6">Andi Mohan</p>
-        <p class="text-wrapper-7">Pendiri Terminal Pintar</p>
-      </article>
-
-      <div class="team-members">
-        <figure class="team-member" v-for="member in team" :key="member.name">
-          <img class="team-photo" :src="member.image" :alt="member.name" />
+    <section id="tentang-kami" class="home__about" aria-labelledby="about-title">
+      <div class="home__section-heading">
+        <h2 id="about-title">Tentang Kami</h2>
+        <p>Menemani perjalanan belajar anak melalui komunitas yang hangat dan kolaboratif.</p>
+      </div>
+      <div class="home__about-grid">
+        <article class="home__about-card">
+          <h3>Sejarah</h3>
+          <p>
+            Terminal Pintar lahir dari gerakan relawan yang ingin menghadirkan ruang aman untuk belajar dan bertumbuh.
+            Dukungan masyarakat membuat program literasi, teknologi, hingga seni terus berkembang sampai hari ini.
+          </p>
+          <img :src="assets.history" alt="Pendiri Terminal Pintar" loading="lazy" />
+          <footer>
+            <span class="home__about-name">Andi Mohan</span>
+            <span class="home__about-role">Pendiri Terminal Pintar</span>
+          </footer>
+        </article>
+        <article class="home__about-card">
+          <h3>Visi</h3>
+          <p>
+            Kami berkomitmen menjadi teman perjalanan bagi setiap anak untuk menemukan arti rumah, pendidikan, dan
+            harapan melalui pengalaman belajar yang relevan, menyenangkan, dan penuh empati.
+          </p>
+          <img :src="assets.vision" alt="Ilustrasi visi Terminal Pintar" loading="lazy" />
+          <footer>
+            <span class="home__about-name">Tim Terminal Pintar</span>
+            <span class="home__about-role">Kolaborasi Pengajar &amp; Relawan</span>
+          </footer>
+        </article>
+      </div>
+      <div class="home__team">
+        <figure v-for="member in team" :key="member.name" class="home__team-member">
+          <img :src="member.image" :alt="member.name" loading="lazy" />
           <figcaption>
-            <p :class="member.nameClass">{{ member.name }}</p>
-            <p :class="member.roleClass">{{ member.role }}</p>
+            <p class="home__team-name">{{ member.name }}</p>
+            <p class="home__team-role">{{ member.role }}</p>
           </figcaption>
         </figure>
       </div>
     </section>
 
-    <section class="contribution-section">
-      <h2 class="text-wrapper-25">Mari Berkontribusi Membangun Harapan!</h2>
-      <article class="tomato">
-        <img class="download-donation" :src="assets.donation" alt="Ikon Donasi" />
-        <h3 class="text-wrapper">DONASI</h3>
-        <p class="div">
-          Mari ikut berdonasi untuk membantu mereka yang membutuhkan. Dukungan Anda sangat berarti..
-        </p>
-        <button class="cart-button" type="button">
-          <span class="text-wrapper-2">Baca Selengkapnya</span>
-        </button>
-        <button class="div-wrapper" type="button">
-          <span class="text-wrapper-3">Lihat Cara Berdonasi</span>
-        </button>
-      </article>
-      <article class="tomato-2">
-        <img class="download-donation" :src="assets.volunteer" alt="Ikon Relawan" />
-        <h3 class="text-wrapper-4">RELAWAN</h3>
-        <p class="div">
-          Mari ikut menjadi relawan untuk membantu mereka yang membutuhkan. Bantuan Anda sangat berarti..
-        </p>
-        <button class="cart-button" type="button">
-          <span class="text-wrapper-2">Baca Selengkapnya</span>
-        </button>
-        <button class="cart-button-2" type="button">
-          <span class="text-wrapper-5">Lihat Cara Mendaftar</span>
-        </button>
-      </article>
+    <section class="home__contribution" aria-labelledby="contribution-title">
+      <div class="home__section-heading home__section-heading--light">
+        <h2 id="contribution-title">Mari Berkontribusi Membangun Harapan!</h2>
+        <p>Setiap dukungan membantu membuka kesempatan belajar yang lebih luas.</p>
+      </div>
+      <div class="home__contribution-grid">
+        <article class="home__contribution-card">
+          <img :src="assets.donation" alt="Ikon Donasi" loading="lazy" />
+          <h3>Donasi</h3>
+          <p>
+            Ikut berdonasi untuk menghadirkan fasilitas belajar, bahan ajar, dan ruang kreatif bagi anak-anak Terminal
+            Pintar.
+          </p>
+          <button type="button">Baca Selengkapnya</button>
+          <button type="button" class="home__ghost">Lihat Cara Berdonasi</button>
+        </article>
+        <article class="home__contribution-card home__contribution-card--accent">
+          <img :src="assets.volunteer" alt="Ikon Relawan" loading="lazy" />
+          <h3>Relawan</h3>
+          <p>
+            Bergabung sebagai relawan pengajar, fasilitator, atau mentor agar lebih banyak anak merasakan pengalaman
+            belajar yang menyenangkan.
+          </p>
+          <button type="button">Baca Selengkapnya</button>
+          <button type="button" class="home__ghost">Lihat Cara Mendaftar</button>
+        </article>
+      </div>
     </section>
 
-    <footer id="kontak" class="frame-3">
-      <section class="contact-info">
-        <h2 class="text-wrapper-38">Kontak Kami</h2>
-        <address>
-          <div class="group">
-            <img class="group-2" :src="assets.phone" alt="" aria-hidden="true" />
-            <a href="tel:+6289123456789" class="text-wrapper-36">+6289123456789</a>
-          </div>
-          <div class="group-3">
-            <img class="gmail-logo" :src="assets.gmail" alt="Gmail" />
-            <a href="mailto:terminalpintar@gmail.com" class="text-wrapper-39">terminalpintar@gmail.com</a>
-          </div>
-        </address>
-      </section>
-      <section class="social-media">
-        <h2 class="text-wrapper-37">Media Sosial</h2>
-        <nav aria-label="Media Sosial">
-          <ul>
-            <li>
-              <a
-                href="https://instagram.com/terminalpintar_id"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="social-link"
-              >
-                <img class="instagram" :src="assets.instagram" alt="Instagram" />
-                <span class="text-wrapper-33">@terminalpintar_id</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://tiktok.com/@terminalpintar"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="social-link"
-              >
-                <img class="tik-tok" :src="assets.tiktok" alt="TikTok" />
-                <span class="text-wrapper-34">@terminalpintar</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://youtube.com/@terminalpintar"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="social-link"
-              >
-                <img class="you-tube" :src="assets.youtube" alt="YouTube" />
-                <span class="text-wrapper-35">Terminal Pintar</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </section>
+    <footer id="kontak" class="home__footer" role="contentinfo">
+      <div class="home__footer-column">
+        <h3>Kontak Kami</h3>
+        <a class="home__footer-link" href="tel:+6289123456789">
+          <img :src="assets.phone" alt="" aria-hidden="true" />
+          <span>+6289123456789</span>
+        </a>
+        <a class="home__footer-link" href="mailto:terminalpintar@gmail.com">
+          <img :src="assets.gmail" alt="" aria-hidden="true" />
+          <span>terminalpintar@gmail.com</span>
+        </a>
+      </div>
+      <div class="home__footer-column">
+        <h3>Media Sosial</h3>
+        <a
+          class="home__footer-link"
+          href="https://instagram.com/terminalpintar_id"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img :src="assets.instagram" alt="Instagram" />
+          <span>@terminalpintar_id</span>
+        </a>
+        <a
+          class="home__footer-link"
+          href="https://tiktok.com/@terminalpintar"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img :src="assets.tiktok" alt="TikTok" />
+          <span>@terminalpintar</span>
+        </a>
+        <a
+          class="home__footer-link"
+          href="https://youtube.com/@terminalpintar"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img :src="assets.youtube" alt="YouTube" />
+          <span>Terminal Pintar</span>
+        </a>
+      </div>
+      <button class="home__back-to-top" type="button" aria-label="Kembali ke atas" @click="scrollTo('beranda')">
+        <img :src="assets.scrollUp" alt="" aria-hidden="true" />
+      </button>
     </footer>
-
-    <button class="arrow-up-circle" type="button" aria-label="Kembali ke atas" @click="scrollTo('beranda')">
-      <img class="icon" :src="assets.scrollUp" alt="" aria-hidden="true" />
-    </button>
   </main>
 </template>
 
@@ -200,33 +195,44 @@ import { newsItems } from '../data/news';
 
 const assets = {
   logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-  hero:
-    'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
-  divider: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNDAiIGhlaWdodD0iMiIgdmlld0JveD0iMCAwIDI0MCAyIj48cmVjdCB3aWR0aD0iMjQwIiBoZWlnaHQ9IjIiIGZpbGw9IiNkMGQ1ZGQiLz48L3N2Zz4=',
+  hero: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
+  bell: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTYgOWE2IDYgMCAxMTEyIDBjMCA0IDEgNiAyIDdINGMxLTEgMi0zIDItNyIvPjxwYXRoIGQ9Ik0xMCAxOWEyIDIgMCAwMDQgMCIvPjwvc3ZnPg==',
   history: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
   vision: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=800&auto=format&fit=crop',
   donation: 'https://images.unsplash.com/photo-1521790361543-f645cf042ec4?q=80&w=600&auto=format&fit=crop',
   volunteer: 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?q=80&w=600&auto=format&fit=crop',
-  phone: 'https://img.icons8.com/ios-filled/50/000000/phone.png',
+  phone: 'https://img.icons8.com/ios-filled/50/4CAF50/phone.png',
   gmail: 'https://img.icons8.com/color/48/gmail--v1.png',
   instagram: 'https://img.icons8.com/fluency/48/instagram-new.png',
   tiktok: 'https://img.icons8.com/fluency/48/tiktok.png',
   youtube: 'https://img.icons8.com/color/48/youtube-play.png',
-  scrollUp: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMCAxMGwtNi41IDhoNC41djEyaDR2LTEyaDQuNXoiIGZpbGw9IiM0Y2FmNTAiLz48L3N2Zz4=',
+  scrollUp: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIyNCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMjQgMTZsLTggOGg2djEyaDRWMjRoNmwtOC04eiIgZmlsbD0iIzRDQUY1MCIvPjwvc3ZnPg==',
 };
+
+const badges = [
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cu'+
+    'dzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iI0VGZkY1QyIgLz48cGF0aCBkPSJNMTYu'+
+    'NSAyMkwxMSAxNi43bDIuMy0yLjVM'+
+    'MTYuNSAxOC42bDQuNy00LjlsMi4zIDIuNXoiIGZpbGw9IiM0Q0FGNTAiIC8+PC9zdmc+',
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cu'+
+    'dzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iI0VGRTVGRiIgLz48cGF0aCBkPSJNMT'+
+    'YgMTBsMyA3aC02bDMtN3ptMCAxMWMtMS4xIDAtMiAuOS0yIDJzLjkgMiAyIDIgMi0uOSAyLTItLjktMi0yLTJ6IiBmaWxsPSIjNDlCMz'+
+    'Q1IiAvPjwvc3ZnPg==',
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cu'+
+    'dzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iI0VGM0ZGNyIgLz48cGF0aCBkPSJNMTEu'+
+    'NSAyMS4xYTEgMSAwIDAgMS0uNy0xLjdsNS03YTEgMSAwIDAgMSAxLjYgMGw1IDdhMSAxIDAgMCAxLTEuNiAxLjRsLTEuOC0yLjQ1TD'+
+    'E2IDIwLjIxbC0yLjkgMy43em0yLjUtOS41YTIgMiAwIDEgMS0yLTIgMiAyIDAgMCAxIDIgMnoiIGZpbGw9IiM0ODkzMzciIC8+PC9zdm'+
+    'c+',
+];
 
 const summaryOverrides = {
   'workshop-coding-untuk-anak':
     'Anak-anak belajar dasar-dasar programming dengan cara yang menyenangkan',
   'kelas-bahasa-interaktif':
-    'Sesi pembelajaran bahasa inggris dengan metode storytelling dan games',
+    'Sesi pembelajaran bahasa Inggris dengan metode storytelling dan games',
   'perpustakaan-mini-dibuka':
-    'Terminal Pintar kini memiliki perpustakaan mini dengan 200+ buku untuk anak-anak',
+    'Perpustakaan mini Terminal Pintar hadir dengan 200+ koleksi bacaan baru',
 };
-
-const cardClasses = ['tomato-5', 'tomato-6', 'tomato-7'];
-const copyClasses = ['text-wrapper-29', 'text-wrapper-32', 'text-wrapper-29'];
-const ctaClasses = ['cart-button', 'cart-button-5', 'cart-button'];
 
 const activities = computed(() =>
   newsItems.slice(0, 3).map((item, index) => ({
@@ -236,9 +242,7 @@ const activities = computed(() =>
     isoDate: item.detail.isoDate,
     description: summaryOverrides[item.slug] || item.summary,
     image: item.image,
-    cardClass: cardClasses[index] || 'tomato-5',
-    copyClass: copyClasses[index] || 'text-wrapper-29',
-    ctaClass: ctaClasses[index] || 'cart-button',
+    badge: badges[index % badges.length],
   }))
 );
 
@@ -247,22 +251,16 @@ const team = [
     name: 'Andi Rahmadi',
     role: 'Pengurus',
     image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=400&auto=format&fit=crop',
-    nameClass: 'text-wrapper-11',
-    roleClass: 'text-wrapper-13',
   },
   {
     name: 'Nabila Nurahani',
     role: 'Pengajar',
     image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop',
-    nameClass: 'text-wrapper-14',
-    roleClass: 'text-wrapper-15',
   },
   {
     name: 'Hanifah Ahmada',
     role: 'Pengajar',
     image: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=400&auto=format&fit=crop',
-    nameClass: 'text-wrapper-16',
-    roleClass: 'text-wrapper-17',
   },
 ];
 
@@ -276,70 +274,69 @@ const scrollTo = (id) => {
 </script>
 
 <style scoped>
-.HOME {
-  background-color: #fef7ff;
+:global(body) {
+  font-family: 'Poppins', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+.home {
+  background: #f5f7fb;
   border: 8px solid #cac4d0;
-  border-radius: 24px;
-  color: #1f2933;
+  border-radius: 28px;
+  color: #1f2b3d;
   display: flex;
   flex-direction: column;
-  font-family: 'Poppins', 'Plus Jakarta Sans', system-ui, sans-serif;
   min-height: 100vh;
   min-width: 1127px;
   overflow: hidden;
   position: relative;
 }
 
-.navigation {
+.home__navigation {
   align-items: center;
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(202, 196, 208, 0.6);
+  background: linear-gradient(90deg, rgba(120, 174, 78, 0.95), rgba(76, 175, 80, 0.95));
   display: grid;
-  gap: 1rem;
-  grid-template-columns: auto auto 1fr auto auto auto auto;
-  padding: 1rem 2.5rem;
+  gap: 1.5rem;
+  grid-template-columns: auto 1fr auto;
+  padding: 1.2rem 2.8rem;
 }
 
-.logo-terminal-pintar {
-  border-radius: 12px;
-  height: 48px;
-  object-fit: cover;
-  width: 48px;
-}
-
-.text-wrapper-18 {
-  color: #2a2a2a;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.frame-2,
-.text-wrapper-20,
-.text-wrapper-21 {
-  display: flex;
+.home__branding {
   align-items: center;
-}
-
-.text-wrapper-22 {
   display: inline-flex;
-  align-items: center;
+  gap: 0.75rem;
 }
 
-.frame-2 a,
-.text-wrapper-20,
-.text-wrapper-21 {
-  color: #4b5c72;
-  font-size: 0.95rem;
+.home__logo {
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(33, 80, 32, 0.25);
+  height: 52px;
+  object-fit: cover;
+  width: 52px;
+}
+
+.home__brand-name {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.home__menu {
+  display: inline-flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.home__menu-link {
+  color: rgba(255, 255, 255, 0.88);
   font-weight: 600;
-  text-decoration: none;
   position: relative;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.frame-2 a::after,
-.text-wrapper-20::after,
-.text-wrapper-21::after {
-  background: linear-gradient(90deg, #78ae4e, #4b8a13);
+.home__menu-link::after {
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 999px;
   bottom: -6px;
   content: '';
@@ -352,498 +349,474 @@ const scrollTo = (id) => {
   width: 100%;
 }
 
-.frame-2 a:hover::after,
-.text-wrapper-20:hover::after,
-.text-wrapper-21:hover::after {
+.home__menu-link:hover {
+  color: #ffffff;
+}
+
+.home__menu-link:hover::after {
   transform: scaleX(1);
 }
 
-.bell {
+.home__actions {
   align-items: center;
-  background: #f2f2f7;
-  border: none;
-  border-radius: 50%;
-  color: #4b5c72;
-  cursor: pointer;
   display: inline-flex;
-  font-size: 1.1rem;
-  height: 40px;
-  justify-content: center;
-  width: 40px;
+  gap: 1rem;
 }
 
-.button {
-  background: linear-gradient(135deg, #78ae4e 0%, #4b8a13 100%);
+.home__icon-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
   border-radius: 999px;
-  color: #fff;
-  padding: 0.65rem 1.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0.55rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.home__icon-button img {
+  height: 20px;
+  width: 20px;
+}
+
+.home__icon-button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.home__login {
+  background: #ffffff;
+  border-radius: 999px;
+  color: #4c8a13;
+  font-weight: 600;
+  padding: 0.55rem 1.8rem;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.home__login:hover {
+  box-shadow: 0 12px 20px rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.home__hero {
+  position: relative;
+}
+
+.home__hero-media {
+  margin: 0;
+}
+
+.home__hero-media img {
+  display: block;
+  height: 420px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.home__hero-overlay {
+  background: linear-gradient(180deg, rgba(20, 48, 31, 0.55) 0%, rgba(20, 48, 31, 0.8) 100%);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.home__hero-content {
+  align-items: flex-start;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  left: 8%;
+  max-width: 480px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.home__hero-eyebrow {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.45rem 1.1rem;
+  text-transform: uppercase;
+}
+
+.home__hero-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.home__hero-description {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.home__hero-cta {
+  align-items: center;
+  background: linear-gradient(135deg, #ffee58, #fff176);
+  border-radius: 999px;
+  color: #3d4e17;
+  display: inline-flex;
+  font-weight: 600;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.button:hover {
-  box-shadow: 0 10px 25px rgba(72, 137, 33, 0.35);
+.home__hero-cta:hover {
+  box-shadow: 0 12px 25px rgba(255, 241, 118, 0.35);
   transform: translateY(-2px);
 }
 
-.text-wrapper-19 {
-  font-size: 0.95rem;
-  font-weight: 600;
+.home__section-heading {
+  margin: 0 auto 2rem;
+  max-width: 640px;
+  text-align: center;
 }
 
-.hero-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  padding: 2.5rem 2.5rem 1.5rem;
-}
-
-.a-importncia-do {
-  border-radius: 24px;
-  height: 320px;
-  object-fit: cover;
-  width: 100%;
-}
-
-.hero-content {
-  align-self: center;
-  background: linear-gradient(180deg, rgba(120, 174, 78, 0.12), rgba(120, 174, 78, 0));
-  border-radius: 24px;
-  padding: 2rem;
-}
-
-.text-wrapper-23 {
-  color: #78ae4e;
-  font-size: 1.75rem;
+.home__section-heading h2 {
+  color: #1f2b3d;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 1rem;
-}
-
-.text-wrapper-26 {
-  color: #4b5c72;
-  font-size: 1rem;
-  line-height: 1.7;
-  margin: 0 0 1.5rem;
-}
-
-.cart-button-4 {
-  background: linear-gradient(135deg, #78ae4e 0%, #4b8a13 100%);
-  border: none;
-  border-radius: 999px;
-  color: #fff;
-  cursor: pointer;
-  padding: 0.9rem 2.2rem;
-}
-
-.text-wrapper-31 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.activities-section {
-  align-items: flex-start;
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  justify-items: stretch;
-  padding: 2rem 2.5rem 1.5rem;
-  position: relative;
-}
-
-.activities-section > h2 {
-  grid-column: 1 / -1;
-  margin: 0;
-}
-
-.text-wrapper-24 {
-  color: #78ae4e;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.tomato-5,
-.tomato-6,
-.tomato-7 {
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 18px 50px rgba(31, 41, 51, 0.08);
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  position: relative;
-}
-
-.buket {
-  border-radius: 18px;
-  height: 170px;
-  margin-bottom: 1.25rem;
-  object-fit: cover;
-  width: 100%;
-}
-
-.text-wrapper-27 {
-  color: #1f2933;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem;
-}
-
-.text-wrapper-28 {
-  color: #6d6d6d;
-  font-size: 0.85rem;
-  font-weight: 500;
   margin-bottom: 0.75rem;
 }
 
-.text-wrapper-29,
-.text-wrapper-32 {
-  color: #6d6d6d;
-  font-size: 0.95rem;
+.home__section-heading p {
+  color: #64748b;
+  font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  margin: 0;
 }
 
-.cart-button,
-.cart-button-5 {
+.home__activities {
+  padding: 4rem 5rem 3.5rem;
+}
+
+.home__activities-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home__activity-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(21, 62, 19, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.75rem;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home__activity-card:hover {
+  box-shadow: 0 24px 45px rgba(21, 62, 19, 0.18);
+  transform: translateY(-6px);
+}
+
+.home__activity-header {
   align-items: center;
-  border: 1px solid #78ae4e;
-  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.home__activity-badge {
+  align-items: center;
+  background: rgba(120, 174, 78, 0.12);
+  border-radius: 999px;
   display: inline-flex;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 1.5rem;
-  text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  padding: 0.45rem;
 }
 
-.cart-button {
-  background: #fff;
-  color: #78ae4e;
+.home__activity-badge img {
+  height: 28px;
+  width: 28px;
 }
 
-.cart-button-5 {
-  background: #78ae4e;
-  color: #fff;
-}
-
-.cart-button:hover,
-.cart-button-5:hover {
-  background: #4b8a13;
-  color: #fff;
-}
-
-.text-wrapper-2 {
+.home__activity-date {
+  color: #4c8a13;
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-.cart-button-3 {
-  align-items: center;
-  background: #78ae4e;
-  border-radius: 999px;
-  color: #fff;
-  display: inline-flex;
-  grid-column: 1 / -1;
-  justify-self: center;
-  margin-top: 1rem;
-  min-height: 44px;
-  padding: 0 2.5rem;
-  text-decoration: none;
-}
-
-.text-wrapper-30 {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.frame {
-  background: linear-gradient(180deg, rgba(120, 174, 78, 0.1), rgba(255, 255, 255, 0));
-  border-radius: 32px;
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 1.5rem 2.5rem 0;
-  padding: 2.5rem;
-}
-
-.text-wrapper-12 {
-  color: #1f2933;
-  font-size: 1.5rem;
-  font-weight: 700;
-  grid-column: 1 / -1;
-  margin: 0;
-}
-
-.line {
-  display: none;
-}
-
-.tomato-3,
-.tomato-4 {
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(31, 41, 51, 0.12);
-  padding: 2rem;
-  position: relative;
-}
-
-.text-wrapper-8,
-.text-wrapper-9 {
-  color: #78ae4e;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0 0 1rem;
-}
-
-.p,
-.text-wrapper-10 {
-  color: #4b5c72;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  margin-bottom: 1.75rem;
-}
-
-.download-donation-3,
-.img {
-  border-radius: 18px;
+.home__activity-image {
+  border-radius: 16px;
   height: 160px;
   object-fit: cover;
   width: 100%;
 }
 
-.text-wrapper-6 {
-  color: #1f2933;
-  font-size: 1rem;
+.home__activity-title {
+  color: #1f2b3d;
+  font-size: 1.2rem;
   font-weight: 600;
-  margin: 1.25rem 0 0.25rem;
-}
-
-.text-wrapper-7 {
-  color: #6d6d6d;
   margin: 0;
 }
 
-.team-members {
-  align-items: stretch;
-  display: flex;
-  gap: 1.5rem;
-  grid-column: 1 / -1;
+.home__activity-copy {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.team-member {
+.home__activity-link {
   align-items: center;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 18px 36px rgba(31, 41, 51, 0.1);
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.team-member img {
-  border-radius: 14px;
-  height: 120px;
-  margin-bottom: 1rem;
-  object-fit: cover;
-  width: 120px;
-}
-
-.team-photo {
-  border-radius: 14px;
-  height: 120px;
-  margin-bottom: 1rem;
-  object-fit: cover;
-  width: 120px;
-}
-
-.text-wrapper-11,
-.text-wrapper-14,
-.text-wrapper-16 {
-  color: #1f2933;
-  font-size: 1rem;
+  color: #4c8a13;
+  display: inline-flex;
   font-weight: 600;
-  margin: 0 0 0.25rem;
+  gap: 0.35rem;
+  text-decoration: none;
 }
 
-.text-wrapper-13,
-.text-wrapper-15,
-.text-wrapper-17 {
-  color: #6d6d6d;
-  font-size: 0.85rem;
-  margin: 0;
+.home__activity-icon {
+  height: 18px;
+  width: 18px;
 }
 
-.contribution-section {
-  background: linear-gradient(180deg, rgba(120, 174, 78, 0.08), rgba(120, 174, 78, 0));
+.home__activities-cta {
+  align-items: center;
+  background: linear-gradient(135deg, #78ae4e, #4c8a13);
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-flex;
+  font-weight: 600;
+  margin: 2.5rem auto 0;
+  padding: 0.85rem 2.5rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home__activities-cta:hover {
+  box-shadow: 0 18px 32px rgba(72, 137, 33, 0.28);
+  transform: translateY(-3px);
+}
+
+.home__about {
+  background: #ffffff;
+  padding: 4rem 5rem;
+}
+
+.home__about-grid {
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 2rem 2.5rem 0;
-  padding: 2.5rem;
+  margin-bottom: 2.5rem;
 }
 
-.text-wrapper-25 {
-  color: #1f2933;
-  font-size: 1.5rem;
+.home__about-card {
+  background: linear-gradient(180deg, #f8fbf2 0%, #ffffff 100%);
+  border-radius: 20px;
+  box-shadow: 0 18px 36px rgba(33, 61, 37, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.home__about-card h3 {
+  color: #4c8a13;
+  font-size: 1.2rem;
   font-weight: 700;
-  grid-column: 1 / -1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.home__about-card p {
+  color: #4a5568;
+  font-size: 0.98rem;
+  line-height: 1.7;
   margin: 0;
 }
 
-.tomato,
-.tomato-2 {
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(31, 41, 51, 0.1);
-  padding: 2rem;
-  position: relative;
-  text-align: center;
-}
-
-.download-donation {
+.home__about-card img {
   border-radius: 16px;
-  height: 140px;
-  margin-bottom: 1.25rem;
+  height: 150px;
   object-fit: cover;
   width: 100%;
 }
 
-.text-wrapper,
-.text-wrapper-4 {
-  color: #78ae4e;
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0 0 1rem;
+.home__about-card footer {
+  border-top: 1px solid rgba(76, 138, 19, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 0.75rem;
 }
 
-.div {
-  color: #4b5c72;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+.home__about-name {
+  color: #1f2b3d;
+  font-weight: 600;
 }
 
-.div-wrapper,
-.cart-button-2 {
-  align-items: center;
-  background: #f2f2f7;
-  border: none;
-  border-radius: 12px;
-  color: #78ae4e;
-  cursor: pointer;
-  display: inline-flex;
+.home__about-role {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.home__team {
+  display: flex;
+  gap: 2.5rem;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 1.5rem;
 }
 
-.frame-3 {
-  background: #fff;
-  border-top: 1px solid rgba(202, 196, 208, 0.4);
+.home__team-member {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.home__team-member img {
+  border-radius: 50%;
+  box-shadow: 0 16px 28px rgba(31, 43, 61, 0.14);
+  height: 96px;
+  object-fit: cover;
+  width: 96px;
+}
+
+.home__team-name {
+  color: #1f2b3d;
+  font-weight: 600;
+  margin: 0;
+}
+
+.home__team-role {
+  color: #64748b;
+  margin: 0;
+}
+
+.home__contribution {
+  background: linear-gradient(180deg, #f8f3ff 0%, #f0f7ff 100%);
+  padding: 4rem 5rem 3.5rem;
+}
+
+.home__section-heading--light h2 {
+  color: #324156;
+}
+
+.home__section-heading--light p {
+  color: #556176;
+}
+
+.home__contribution-grid {
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 2.5rem 2.5rem;
-  padding: 2.5rem;
 }
 
-.contact-info address {
-  display: grid;
-  gap: 1rem;
-  font-style: normal;
-}
-
-.group,
-.group-3 {
-  align-items: center;
+.home__contribution-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(48, 67, 104, 0.12);
   display: flex;
-  gap: 0.75rem;
-}
-
-.group-2,
-.gmail-logo,
-.instagram,
-.tik-tok,
-.you-tube {
-  height: 28px;
-  width: 28px;
-}
-
-.text-wrapper-36,
-.text-wrapper-39,
-.text-wrapper-33,
-.text-wrapper-34,
-.text-wrapper-35 {
-  color: #4b5c72;
-  font-size: 0.95rem;
-  text-decoration: none;
-}
-
-.social-media ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
+  flex-direction: column;
   gap: 1rem;
+  padding: 2rem;
 }
 
-.social-link {
+.home__contribution-card img {
+  height: 64px;
+  width: 64px;
+}
+
+.home__contribution-card h3 {
+  color: #334155;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.home__contribution-card p {
+  color: #556176;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.home__contribution-card button {
   align-items: center;
+  background: linear-gradient(135deg, #78ae4e, #4c8a13);
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.75rem 1.8rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home__contribution-card button:hover {
+  box-shadow: 0 18px 30px rgba(72, 137, 33, 0.28);
+  transform: translateY(-2px);
+}
+
+.home__contribution-card--accent button {
+  background: linear-gradient(135deg, #ff9d42, #ff7b2c);
+}
+
+.home__ghost {
+  background: rgba(76, 138, 19, 0.1) !important;
+  color: #4c8a13 !important;
+}
+
+.home__footer {
+  align-items: center;
+  background: linear-gradient(180deg, #5a8d2c 0%, #3f6a14 100%);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  padding: 2.5rem 4rem;
+}
+
+.home__footer-column h3 {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.home__footer-link {
+  align-items: center;
+  color: #f0fdf4;
   display: inline-flex;
   gap: 0.75rem;
+  margin-bottom: 0.75rem;
   text-decoration: none;
 }
 
-.social-link:hover span {
-  color: #78ae4e;
+.home__footer-link img {
+  height: 24px;
+  width: 24px;
 }
 
-.arrow-up-circle {
-  align-items: center;
-  background: #78ae4e;
+.home__back-to-top {
+  background: rgba(255, 255, 255, 0.18);
   border: none;
-  border-radius: 50%;
-  bottom: 2rem;
+  border-radius: 999px;
   cursor: pointer;
-  display: inline-flex;
-  height: 48px;
-  justify-content: center;
-  position: sticky;
-  margin-left: auto;
-  margin-right: 2.5rem;
-  width: 48px;
+  height: 54px;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+  width: 54px;
 }
 
-.arrow-up-circle .icon {
-  height: 28px;
-  width: 28px;
+.home__back-to-top img {
+  height: 24px;
+  width: 24px;
 }
 
-@media (max-width: 1280px) {
-  .navigation {
-    grid-template-columns: auto auto auto auto auto;
-    grid-template-rows: repeat(2, auto);
-  }
-
-  .hero-section {
-    grid-template-columns: 1fr;
-  }
-
-  .activities-section {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .frame {
-    grid-template-columns: 1fr;
-  }
-
-  .contribution-section {
-    grid-template-columns: 1fr;
-  }
-
-  .frame-3 {
-    grid-template-columns: 1fr;
-  }
+.home__back-to-top:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 </style>
