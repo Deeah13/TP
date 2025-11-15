@@ -196,7 +196,7 @@ import { newsItems } from '../data/news';
 const assets = {
   logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
   hero: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
-  bell: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTYgOWE2IDYgMCAxMTEyIDBjMCA0IDEgNiAyIDdINGMxLTEgMi0zIDItNyIvPjxwYXRoIGQ9Ik0xMCAxOWEyIDIgMCAwMDQgMCIvPjwvc3ZnPg==',
+  bell: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGM4YTEzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBhMiAyIDAgMSAwIDQtMiI+PC9wYXRoPjxwYXRoIGQ9Ik0zLjg2IDE3SDIwLjEzYTEgMSAwIDAwLjg3LTEuNTRBMTEuMDMgMTEuMDMgMCAwMDIwIDExYzAtNS41My00LjQ3LTEwLTEwLTEwUzkgNS40NyA5IDExYTExLjAzIDExLjAzIDAgMDAtNS4wMSA0LjQ2IDEgMSAwIDAwLjg3IDEuNTR6Ij48L3BhdGg+PC9zdmc+',
   history: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
   vision: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=800&auto=format&fit=crop',
   donation: 'https://images.unsplash.com/photo-1521790361543-f645cf042ec4?q=80&w=600&auto=format&fit=crop',
@@ -293,11 +293,16 @@ const scrollTo = (id) => {
 
 .home__navigation {
   align-items: center;
-  background: linear-gradient(90deg, rgba(120, 174, 78, 0.95), rgba(76, 175, 80, 0.95));
+  background: #ffffff;
+  border-bottom: 1px solid rgba(202, 196, 208, 0.55);
+  box-shadow: 0 12px 28px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
-  padding: 1.2rem 2.8rem;
+  padding: 1.1rem 2.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .home__branding {
@@ -308,14 +313,14 @@ const scrollTo = (id) => {
 
 .home__logo {
   border-radius: 14px;
-  box-shadow: 0 8px 18px rgba(33, 80, 32, 0.25);
+  box-shadow: 0 12px 24px rgba(31, 43, 61, 0.15);
   height: 52px;
   object-fit: cover;
   width: 52px;
 }
 
 .home__brand-name {
-  color: #fff;
+  color: #233143;
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -328,7 +333,7 @@ const scrollTo = (id) => {
 }
 
 .home__menu-link {
-  color: rgba(255, 255, 255, 0.88);
+  color: #4b5c72;
   font-weight: 600;
   position: relative;
   text-decoration: none;
@@ -336,7 +341,7 @@ const scrollTo = (id) => {
 }
 
 .home__menu-link::after {
-  background: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(90deg, #78ae4e, #4c8a13);
   border-radius: 999px;
   bottom: -6px;
   content: '';
@@ -350,7 +355,7 @@ const scrollTo = (id) => {
 }
 
 .home__menu-link:hover {
-  color: #ffffff;
+  color: #4c8a13;
 }
 
 .home__menu-link:hover::after {
@@ -364,42 +369,44 @@ const scrollTo = (id) => {
 }
 
 .home__icon-button {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(120, 174, 78, 0.12);
   border: none;
-  border-radius: 999px;
+  border-radius: 12px;
   cursor: pointer;
   display: inline-flex;
-  padding: 0.55rem;
+  padding: 0.6rem;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .home__icon-button img {
-  height: 20px;
-  width: 20px;
+  height: 22px;
+  width: 22px;
 }
 
 .home__icon-button:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(120, 174, 78, 0.22);
   transform: translateY(-1px);
 }
 
 .home__login {
-  background: #ffffff;
+  background: linear-gradient(135deg, #78ae4e, #4c8a13);
   border-radius: 999px;
-  color: #4c8a13;
+  color: #ffffff;
+  display: inline-flex;
   font-weight: 600;
-  padding: 0.55rem 1.8rem;
+  padding: 0.6rem 1.9rem;
   text-decoration: none;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .home__login:hover {
-  box-shadow: 0 12px 20px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 16px 30px rgba(72, 137, 33, 0.28);
   transform: translateY(-2px);
 }
 
 .home__hero {
   position: relative;
+  overflow: hidden;
 }
 
 .home__hero-media {
@@ -408,13 +415,13 @@ const scrollTo = (id) => {
 
 .home__hero-media img {
   display: block;
-  height: 420px;
+  height: 460px;
   object-fit: cover;
   width: 100%;
 }
 
 .home__hero-overlay {
-  background: linear-gradient(180deg, rgba(20, 48, 31, 0.55) 0%, rgba(20, 48, 31, 0.8) 100%);
+  background: linear-gradient(110deg, rgba(31, 43, 61, 0.78) 0%, rgba(44, 98, 38, 0.82) 55%, rgba(76, 138, 19, 0.7) 100%);
   inset: 0;
   pointer-events: none;
   position: absolute;
@@ -428,7 +435,7 @@ const scrollTo = (id) => {
   flex-direction: column;
   gap: 1rem;
   left: 8%;
-  max-width: 480px;
+  max-width: 520px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -446,27 +453,28 @@ const scrollTo = (id) => {
 }
 
 .home__hero-title {
-  font-size: 2.25rem;
+  font-size: 2.6rem;
   font-weight: 700;
   line-height: 1.3;
   margin: 0;
 }
 
 .home__hero-description {
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.8;
   margin: 0;
 }
 
 .home__hero-cta {
   align-items: center;
-  background: linear-gradient(135deg, #ffee58, #fff176);
+  background: linear-gradient(135deg, #ffee58, #ffca28);
   border-radius: 999px;
   color: #3d4e17;
   display: inline-flex;
   font-weight: 600;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
+  gap: 0.6rem;
+  letter-spacing: 0.01em;
+  padding: 0.85rem 2.1rem;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -771,11 +779,11 @@ const scrollTo = (id) => {
 
 .home__footer {
   align-items: center;
-  background: linear-gradient(180deg, #5a8d2c 0%, #3f6a14 100%);
+  background: #1f2b3d;
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
-  padding: 2.5rem 4rem;
+  padding: 2.75rem 4rem;
 }
 
 .home__footer-column h3 {
@@ -787,7 +795,7 @@ const scrollTo = (id) => {
 
 .home__footer-link {
   align-items: center;
-  color: #f0fdf4;
+  color: rgba(241, 245, 249, 0.92);
   display: inline-flex;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
@@ -800,23 +808,27 @@ const scrollTo = (id) => {
 }
 
 .home__back-to-top {
-  background: rgba(255, 255, 255, 0.18);
-  border: none;
-  border-radius: 999px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
   cursor: pointer;
-  height: 54px;
+  display: inline-flex;
+  height: 58px;
+  justify-content: center;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
-  width: 54px;
+  width: 58px;
+  justify-self: end;
 }
 
 .home__back-to-top img {
-  height: 24px;
-  width: 24px;
+  height: 26px;
+  width: 26px;
 }
 
 .home__back-to-top:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.28);
   transform: translateY(-2px);
 }
 </style>
