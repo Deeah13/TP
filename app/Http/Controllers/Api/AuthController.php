@@ -25,8 +25,12 @@ class AuthController extends Controller
         $user = User::query()
             ->where('role', $credentials['role'])
             ->where(function ($query) use ($identifier) {
-                $query->whereRaw('LOWER(email) = ?', [$identifier])
-                    ->orWhereRaw('LOWER(username) = ?', [$identifier]);
+                $grammar = $query->getQuery()->getGrammar();
+                $emailColumn = $grammar->wrap('email');
+                $usernameColumn = $grammar->wrap('username');
+
+                $query->whereRaw(sprintf('LOWER(%s) = ?', $emailColumn), [$identifier])
+                    ->orWhereRaw(sprintf('LOWER(%s) = ?', $usernameColumn), [$identifier]);
             })
             ->first();
 

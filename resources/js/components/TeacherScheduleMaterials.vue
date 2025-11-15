@@ -443,7 +443,7 @@ const { user, logout } = useAuth();
 const organizationName = computed(() => user.value?.organization ?? 'Terminal Pintar');
 const roleLabel = computed(() => 'Dashboard Guru');
 const profileName = computed(() => user.value?.name ?? 'Guru Terminal Pintar');
-const profileEmail = computed(() => user.value?.contact?.email ?? 'guru@terminalpintar.id');
+const profileEmail = computed(() => user.value?.contact?.email ?? 'Belum tersedia');
 const profileAvatar = computed(() => user.value?.avatar ?? assets.avatarFallback);
 
 const notifications = [

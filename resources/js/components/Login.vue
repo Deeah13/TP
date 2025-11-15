@@ -35,7 +35,7 @@
               v-model="form.identifier"
               type="text"
               name="identifier"
-              placeholder="contoh: guru@terminalpintar.id"
+              placeholder="contoh: nama@contoh.id"
               autocomplete="username"
               :disabled="isSubmitting"
               required
