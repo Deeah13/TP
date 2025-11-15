@@ -398,7 +398,6 @@
         </div>
       </section>
     </transition>
-  </div>
     <transition-group name="schedule-toast" tag="ol" class="schedule__toasts" aria-live="polite" aria-atomic="true">
       <li v-for="toast in toasts" :key="toast.id" class="schedule-toast">
         <span class="schedule-toast__icon">✓</span>
