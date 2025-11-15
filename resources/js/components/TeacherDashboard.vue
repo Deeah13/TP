@@ -4,8 +4,8 @@
       <div class="teacher__brand">
         <img class="teacher__logo" :src="assets.logo" alt="Logo Terminal Pintar" />
         <div class="teacher__brand-text">
-          <span class="teacher__brand-name">Terminal Pintar</span>
-          <span class="teacher__brand-sub">Dashboard Guru</span>
+          <span class="teacher__brand-name">{{ organizationName }}</span>
+          <span class="teacher__brand-sub">{{ roleLabel }}</span>
         </div>
       </div>
       <nav class="teacher__top-nav" aria-label="Navigasi utama guru">
@@ -36,7 +36,7 @@
           aria-controls="profile-panel"
           @click.stop="toggleProfile"
         >
-          <img :src="assets.avatar" alt="Profil Guru" />
+          <img :src="profileAvatar" :alt="`Profil ${profileName}`" />
         </button>
       </div>
 
@@ -74,10 +74,10 @@
           role="dialog"
           aria-label="Informasi profil guru"
         >
-          <img :src="assets.avatar" alt="Avatar Guru" />
-          <p class="teacher__profile-name">Ica Bali Tri Susmita</p>
-          <p class="teacher__profile-email">cabal@gmail.com</p>
-          <button type="button" class="teacher__logout">Keluar</button>
+          <img :src="profileAvatar" :alt="`Avatar ${profileName}`" />
+          <p class="teacher__profile-name">{{ profileName }}</p>
+          <p class="teacher__profile-email">{{ profileEmail }}</p>
+          <button type="button" class="teacher__logout" @click="handleLogout">Keluar</button>
         </section>
       </transition>
     </header>
@@ -87,25 +87,60 @@
         <div class="teacher__sidebar-section">
           <p class="teacher__sidebar-label">Menu Utama</p>
           <ul>
-            <li v-for="item in mainMenu" :key="item.label" class="teacher__sidebar-item" :class="{ 'teacher__sidebar-item--active': item.active }">
-              <span class="teacher__sidebar-icon" :style="{ background: item.accent }">
-                <component :is="item.icon"></component>
-              </span>
-              <span>{{ item.label }}</span>
+            <li
+              v-for="item in mainMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon" :style="{ background: item.accent }">
+                  <component :is="item.icon"></component>
+                </span>
+                <span>{{ item.label }}</span>
+              </button>
             </li>
           </ul>
         </div>
         <div class="teacher__sidebar-section">
           <p class="teacher__sidebar-label">Manajemen Akademik</p>
           <ul>
-            <li v-for="item in academicMenu" :key="item.label" class="teacher__sidebar-item">
-              <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
-                <component :is="item.icon"></component>
-              </span>
-              <div class="teacher__sidebar-text">
-                <span>{{ item.label }}</span>
-                <small>{{ item.subtitle }}</small>
-              </div>
+            <li
+              v-for="item in academicMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link teacher__sidebar-link--wide" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
+                  <component :is="item.icon"></component>
+                </span>
+                <div class="teacher__sidebar-text">
+                  <span>{{ item.label }}</span>
+                  <small>{{ item.subtitle }}</small>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="teacher__sidebar-section">
+          <p class="teacher__sidebar-label">Kehadiran</p>
+          <ul>
+            <li
+              v-for="item in attendanceMenu"
+              :key="item.label"
+              class="teacher__sidebar-item"
+              :class="{ 'teacher__sidebar-item--active': item.active }"
+            >
+              <button type="button" class="teacher__sidebar-link teacher__sidebar-link--wide" @click="handleSidebarClick(item)">
+                <span class="teacher__sidebar-icon teacher__sidebar-icon--outline">
+                  <component :is="item.icon"></component>
+                </span>
+                <div class="teacher__sidebar-text">
+                  <span>{{ item.label }}</span>
+                  <small>{{ item.subtitle }}</small>
+                </div>
+              </button>
             </li>
           </ul>
         </div>
@@ -115,9 +150,9 @@
         <section class="teacher__welcome">
           <div>
             <p class="teacher__welcome-eyebrow">Selamat Datang,</p>
-            <h1>Ibu Ica</h1>
+            <h1>{{ greetingName }}</h1>
             <p class="teacher__welcome-copy">
-              Kelola kegiatan belajar mengajar dan pantau performa siswa di Terminal Pintar.
+              Kelola kegiatan belajar mengajar dan pantau performa siswa di {{ organizationName }}.
             </p>
           </div>
           <div class="teacher__next-class">
@@ -165,7 +200,7 @@
                 <h3>{{ action.title }}</h3>
                 <p>{{ action.description }}</p>
               </div>
-              <button type="button">
+              <button type="button" @click="action.action && action.action()">
                 <span>{{ action.cta }}</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" /></svg>
               </button>
@@ -179,7 +214,7 @@
               <h2>Jadwal Pembelajaran</h2>
               <p>Tinjau sesi pekan ini dan status kehadiran siswa.</p>
             </div>
-            <button type="button">Kelola Jadwal</button>
+            <button type="button" @click="openScheduleManager('create-schedule')">Kelola Jadwal</button>
           </header>
           <ul>
             <li v-for="session in sessions" :key="session.id" class="teacher__session">
@@ -205,6 +240,8 @@
 
 <script setup>
 import { computed, h, markRaw, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAuth } from '../stores/auth';
 
 const createIcon = (...paths) =>
   markRaw({
@@ -223,8 +260,31 @@ const createIcon = (...paths) =>
 const assets = {
   logo: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92eee?auto=format&fit=crop&w=120&q=80',
   bell: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkE3QjM0IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBhMiAyIDAgMCAwIDQtMiI+PC9wYXRoPjxwYXRoIGQ9Ik0zLjg2IDE3SDIwLjEzYTEgMSAwIDAwLjg3LTEuNTRBMTEuMDMgMTEuMDMgMCAwMDIwIDExYzAtNS41My00LjQ3LTEwLTEwLTEwUzkgNS40NyA5IDExYTExLjAzIDExLjAzIDAgMDAtNS4wMSA0LjQ2IDEgMSAwIDAwLjg3IDEuNTR6Ij48L3BhdGg+PC9zdmc+',
-  avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
+  avatarFallback: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
 };
+
+const router = useRouter();
+const route = useRoute();
+const { user, logout } = useAuth();
+
+const organizationName = computed(() => user.value?.organization ?? 'Terminal Pintar');
+const roleLabel = computed(() => {
+  switch (user.value?.role) {
+    case 'teacher':
+      return 'Dashboard Guru';
+    case 'admin':
+      return 'Dashboard Admin';
+    case 'parent':
+      return 'Dashboard Orang Tua';
+    default:
+      return 'Dashboard Pengguna';
+  }
+});
+
+const profileName = computed(() => user.value?.name ?? 'Pengguna Terminal Pintar');
+const profileEmail = computed(() => user.value?.contact?.email ?? 'guru@terminalpintar.id');
+const profileAvatar = computed(() => user.value?.avatar ?? assets.avatarFallback);
+const greetingName = computed(() => user.value?.shortName ?? user.value?.name ?? 'Guru Terminal Pintar');
 
 const notifications = [
   {
@@ -241,32 +301,49 @@ const notifications = [
   },
 ];
 
-const mainMenu = [
-  {
-    label: 'Beranda',
-    accent: 'linear-gradient(135deg, rgba(118,179,64,0.85), rgba(99,144,57,0.75))',
-    icon: createIcon({ d: 'M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z', fill: 'currentColor' }),
-    active: true,
-  },
-];
+const heroAccent = (active) =>
+  active
+    ? 'linear-gradient(135deg, rgba(118,179,64,0.85), rgba(99,144,57,0.75))'
+    : 'linear-gradient(135deg, rgba(118,179,64,0.35), rgba(118,179,64,0.15))';
 
-const academicMenu = [
-  {
-    label: 'Jadwal & Materi',
-    subtitle: 'Atur pertemuan mingguan',
-    icon: createIcon({ d: 'M6 4h12a2 2 0 012 2v2H4V6a2 2 0 012-2zm14 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8zm-5 3h-6v2h6z', fill: 'currentColor' }),
-  },
-  {
-    label: 'Kehadiran',
-    subtitle: 'Rekap absensi kelas',
-    icon: createIcon({ d: 'M12 12a5 5 0 10-5-5 5 5 0 005 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z', fill: 'currentColor' }),
-  },
-  {
-    label: 'Penilaian',
-    subtitle: 'Input nilai & catatan',
-    icon: createIcon({ d: 'M4 3h16a1 1 0 011 1v13.59l-4-4a1 1 0 00-1.42 0L13 20H4a1 1 0 01-1-1V4a1 1 0 011-1zm5 6H7v2h2zm0-4H7v2h2zm8 0h-6v2h6zm0 4h-6v2h6z', fill: 'currentColor' }),
-  },
-];
+const mainMenu = computed(() => {
+  const isDashboard = route.name === 'teacher-dashboard';
+  return [
+    {
+      label: 'Beranda',
+      accent: heroAccent(isDashboard),
+      icon: createIcon({ d: 'M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z', fill: 'currentColor' }),
+      to: { name: 'teacher-dashboard' },
+      active: isDashboard,
+    },
+  ];
+});
+
+const academicMenu = computed(() => {
+  const isSchedule = route.name === 'teacher-schedule';
+  return [
+    {
+      label: 'Jadwal & Materi',
+      subtitle: 'Atur pertemuan mingguan',
+      icon: createIcon({ d: 'M6 4h12a2 2 0 012 2v2H4V6a2 2 0 012-2zm14 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8zm-5 3h-6v2h6z', fill: 'currentColor' }),
+      to: { name: 'teacher-schedule' },
+      active: isSchedule,
+    },
+  ];
+});
+
+const attendanceMenu = computed(() => {
+  const isAttendance = route.name === 'teacher-attendance';
+  return [
+    {
+      label: 'Kehadiran',
+      subtitle: 'Rekap absensi & catatan',
+      icon: createIcon({ d: 'M4 6h16a1 1 0 011 1v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7a1 1 0 011-1zm5 3v2h6V9zm0 4v2h4v-2z', fill: 'currentColor' }),
+      to: { name: 'teacher-attendance' },
+      active: isAttendance,
+    },
+  ];
+});
 
 const summaryCards = computed(() => [
   {
@@ -303,7 +380,11 @@ const summaryCards = computed(() => [
   },
 ]);
 
-const quickActions = [
+const openScheduleManager = (modal) => {
+  router.push({ name: 'teacher-schedule', query: modal ? { modal } : {} });
+};
+
+const quickActions = computed(() => [
   {
     title: 'Buat Sesi Baru',
     description: 'Tambahkan jadwal dan sesi baru untuk kelas Anda.',
@@ -317,6 +398,7 @@ const quickActions = [
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
     }),
+    action: () => openScheduleManager('create-schedule'),
   },
   {
     title: 'Upload Materi',
@@ -331,6 +413,7 @@ const quickActions = [
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
     }),
+    action: () => openScheduleManager('create-material'),
   },
   {
     title: 'Laporan Kehadiran',
@@ -338,32 +421,27 @@ const quickActions = [
     cta: 'Lihat',
     accent: 'rgba(255,193,7,0.18)',
     icon: createIcon({ d: 'M5 3h14a2 2 0 012 2v14l-4-3-4 3-4-3-4 3V5a2 2 0 012-2z', fill: 'currentColor' }),
+    action: () => router.push({ name: 'teacher-attendance' }),
   },
   {
-    title: 'Riwayat Penilaian',
-    description: 'Tampilkan penilaian guru terhadap siswa secara ringkas.',
-    cta: 'Tinjau',
+    title: 'Catat Perkembangan',
+    description: 'Segera isi catatan perkembangan siswa selama pembelajaran.',
+    cta: 'Catat',
     accent: 'rgba(244,143,177,0.18)',
-    icon: createIcon(
-      {
-        d: 'M9 11l3 3L22 4',
-        fill: 'none',
-        stroke: 'currentColor',
-        'stroke-width': '2',
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-      },
-      {
-        d: 'M2 20h20',
-        fill: 'none',
-        stroke: 'currentColor',
-        'stroke-width': '2',
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-      },
-    ),
+    icon: createIcon({ d: 'M5 5h14v14H5z', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+    action: () => router.push({ name: 'teacher-attendance', query: { focus: 'notes' } }),
   },
-];
+]);
+
+const handleSidebarClick = (item) => {
+  if (!item?.to) {
+    return;
+  }
+  if (item.to.name === route.name && !item.to.query) {
+    return;
+  }
+  router.push(item.to);
+};
 
 const sessions = [
   {
@@ -440,6 +518,12 @@ const toggleProfile = () => {
   }
 };
 
+const handleLogout = async () => {
+  showProfile.value = false;
+  await logout();
+  router.replace({ name: 'login' });
+};
+
 const handleClickOutside = (event) => {
   const elements = [
     notificationPanel.value,
@@ -460,15 +544,25 @@ const handleEscape = (event) => {
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  document.addEventListener('click', handleClickOutside);
-  document.addEventListener('keydown', handleEscape);
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+  }
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('click', handleClickOutside);
-  document.removeEventListener('keydown', handleEscape);
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleScroll);
+  }
+
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('keydown', handleEscape);
+  }
 });
 </script>
 
@@ -765,24 +859,38 @@ onBeforeUnmount(() => {
 }
 
 .teacher__sidebar-item {
+  margin: 0;
+}
+
+.teacher__sidebar-link {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  padding: 0.7rem 0.85rem;
   border-radius: 16px;
+  border: 1px solid rgba(118, 179, 64, 0.12);
+  background: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   color: rgba(31, 31, 31, 0.75);
-  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.teacher__sidebar-item--active {
-  background: rgba(118, 179, 64, 0.15);
+.teacher__sidebar-link--wide {
+  align-items: flex-start;
+}
+
+.teacher__sidebar-item--active .teacher__sidebar-link {
+  background: rgba(118, 179, 64, 0.18);
+  border-color: rgba(118, 179, 64, 0.28);
   color: #4a7c2c;
 }
 
-.teacher__sidebar-item:hover {
+.teacher__sidebar-link:hover {
   transform: translateX(4px);
-  background: rgba(118, 179, 64, 0.1);
+  box-shadow: 0 12px 30px -28px rgba(74, 124, 44, 0.5);
 }
 
 .teacher__sidebar-icon {

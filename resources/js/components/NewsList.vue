@@ -9,7 +9,7 @@
         <RouterLink :to="{ name: 'home' }">Beranda</RouterLink>
         <a href="#arsip" @click.prevent="scrollTo('arsip')">Kegiatan</a>
       </nav>
-      <a class="news__login" href="/login">Login</a>
+      <RouterLink class="news__login" :to="{ name: 'login' }">Login</RouterLink>
     </header>
 
     <main class="news__content">
