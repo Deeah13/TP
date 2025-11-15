@@ -261,7 +261,7 @@ const roleLabel = computed(() => {
 });
 
 const profileName = computed(() => user.value?.name ?? 'Pengguna Terminal Pintar');
-const profileEmail = computed(() => user.value?.email ?? 'guru@terminalpintar.id');
+const profileEmail = computed(() => user.value?.contact?.email ?? 'guru@terminalpintar.id');
 const profileAvatar = computed(() => user.value?.avatar ?? assets.avatarFallback);
 const greetingName = computed(() => user.value?.shortName ?? user.value?.name ?? 'Guru Terminal Pintar');
 
