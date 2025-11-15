@@ -1,6 +1,6 @@
 <template>
   <main class="home" id="beranda">
-    <header class="home__navigation" role="banner">
+    <header :class="['home__navigation', { 'home__navigation--glass': isScrolled }]" role="banner">
       <div class="home__branding">
         <img class="home__logo" :src="assets.logo" alt="Logo Terminal Pintar" />
         <span class="home__brand-name">Terminal Pintar</span>
@@ -12,7 +12,7 @@
       </nav>
       <div class="home__actions">
         <button class="home__icon-button" type="button" aria-label="Notifikasi">
-          <img :src="assets.bell" alt="" aria-hidden="false" />
+          <img :src="assets.bell" alt="" aria-hidden="true" />
         </button>
         <a class="home__login" href="/login">Login</a>
       </div>
@@ -81,7 +81,10 @@
             Dukungan masyarakat membuat program literasi, teknologi, hingga seni terus berkembang sampai hari ini.
           </p>
           <img :src="assets.history" alt="Pendiri Terminal Pintar" loading="lazy" />
-         
+          <footer>
+            <span class="home__about-name">Andi Mohan</span>
+            <span class="home__about-role">Pendiri Terminal Pintar</span>
+          </footer>
         </article>
         <article class="home__about-card">
           <h3>Visi</h3>
@@ -90,7 +93,10 @@
             harapan melalui pengalaman belajar yang relevan, menyenangkan, dan penuh empati.
           </p>
           <img :src="assets.vision" alt="Ilustrasi visi Terminal Pintar" loading="lazy" />
-         
+          <footer>
+            <span class="home__about-name">Tim Terminal Pintar</span>
+            <span class="home__about-role">Kolaborasi Pengajar &amp; Relawan</span>
+          </footer>
         </article>
       </div>
       <div class="home__team">
@@ -183,14 +189,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { newsItems } from '../data/news';
 
 const assets = {
   logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
   hero: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
-  bell: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNEE1NTY4IiBzdHJva2Utd2lkdGg9IjEuOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiA5YTYgNiAwIDExMTIgMGMwIDQgMSA2IDIgN0g0YzEtMSAyLTMgMi03Ii8+PHBhdGggZD0iTTEwIDE5YTIgMiAwIDAwNCAwIi8+PC9zdmc+',
+  bell: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGM4YTEzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBhMiAyIDAgMSAwIDQtMiI+PC9wYXRoPjxwYXRoIGQ9Ik0zLjg2IDE3SDIwLjEzYTEgMSAwIDAwLjg3LTEuNTRBMTEuMDMgMTEuMDMgMCAwMDIwIDExYzAtNS41My00LjQ3LTEwLTEwLTEwUzkgNS40NyA5IDExYTExLjAzIDExLjAzIDAgMDAtNS4wMSA0LjQ2IDEgMSAwIDAwLjg3IDEuNTR6Ij48L3BhdGg+PC9zdmc+',
+  history: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
   vision: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=800&auto=format&fit=crop',
   donation: 'https://images.unsplash.com/photo-1521790361543-f645cf042ec4?q=80&w=600&auto=format&fit=crop',
   volunteer: 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?q=80&w=600&auto=format&fit=crop',
@@ -257,6 +264,30 @@ const team = [
   },
 ];
 
+const isScrolled = ref(false);
+
+const evaluateScrollState = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 24;
+};
+
+onMounted(() => {
+  evaluateScrollState();
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', evaluateScrollState, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', evaluateScrollState);
+  }
+});
+
 const scrollTo = (id) => {
   const target = document.getElementById(id);
 
@@ -286,16 +317,25 @@ const scrollTo = (id) => {
 
 .home__navigation {
   align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(202, 196, 208, 0.55);
-  box-shadow: 0 12px 28px rgba(25, 39, 58, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(202, 196, 208, 0.45);
+  box-shadow: 0 10px 24px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
-  padding: 1.1rem 2.8rem;
+  padding: 1.05rem 2.8rem;
   position: sticky;
   top: 0;
-  z-index: 10;
+  transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+  z-index: 24;
+}
+
+.home__navigation--glass {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 45px rgba(21, 35, 54, 0.18);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
 .home__branding {
@@ -508,20 +548,44 @@ const scrollTo = (id) => {
 }
 
 .home__activity-card {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(21, 62, 19, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 22px;
+  box-shadow: 0 24px 48px rgba(21, 62, 19, 0.14);
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
+  overflow: hidden;
   padding: 1.75rem;
   position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+}
+
+.home__activity-card::after {
+  background: linear-gradient(135deg, rgba(120, 174, 78, 0.12), rgba(76, 138, 19, 0.08));
+  content: '';
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.home__activity-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .home__activity-card:hover {
-  box-shadow: 0 24px 45px rgba(21, 62, 19, 0.18);
-  transform: translateY(-6px);
+  border-color: rgba(120, 174, 78, 0.4);
+  box-shadow: 0 32px 60px rgba(21, 62, 19, 0.22);
+  transform: translateY(-8px);
+}
+
+.home__activity-card:hover::after {
+  opacity: 1;
 }
 
 .home__activity-header {
@@ -716,13 +780,44 @@ const scrollTo = (id) => {
 }
 
 .home__contribution-card {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(48, 67, 104, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 22px;
+  box-shadow: 0 26px 50px rgba(35, 57, 92, 0.16);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 2rem;
+  padding: 2.2rem;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+.home__contribution-card::before {
+  border-radius: inherit;
+  content: '';
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: linear-gradient(135deg, rgba(120, 174, 78, 0.12), rgba(72, 137, 33, 0.18));
+}
+
+.home__contribution-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home__contribution-card:hover {
+  border-color: rgba(120, 174, 78, 0.35);
+  box-shadow: 0 34px 65px rgba(35, 57, 92, 0.22);
+  transform: translateY(-8px);
+}
+
+.home__contribution-card:hover::before {
+  opacity: 1;
 }
 
 .home__contribution-card img {
@@ -759,6 +854,10 @@ const scrollTo = (id) => {
 .home__contribution-card button:hover {
   box-shadow: 0 18px 30px rgba(72, 137, 33, 0.28);
   transform: translateY(-2px);
+}
+
+.home__contribution-card--accent::before {
+  background: linear-gradient(135deg, rgba(255, 157, 66, 0.12), rgba(255, 123, 44, 0.18));
 }
 
 .home__contribution-card--accent button {
@@ -809,6 +908,7 @@ const scrollTo = (id) => {
   display: inline-flex;
   height: 58px;
   justify-content: center;
+  align-self: end;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
   width: 58px;

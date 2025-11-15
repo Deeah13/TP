@@ -1,6 +1,10 @@
 <template>
   <div class="detail" id="top">
-    <header v-if="article" class="detail__navigation" role="banner">
+    <header
+      v-if="article"
+      :class="['detail__navigation', { 'detail__navigation--glass': isScrolled }]"
+      role="banner"
+    >
       <RouterLink class="detail__brand" :to="{ name: 'home' }" aria-label="Kembali ke beranda">
         <img :src="assets.logo" alt="Logo Terminal Pintar" />
         <div>
@@ -14,6 +18,9 @@
         <RouterLink :to="{ name: 'news' }">Dokumentasi</RouterLink>
       </nav>
       <div class="detail__actions">
+        <button type="button" class="detail__icon" aria-label="Notifikasi">
+          <img :src="assets.bell" alt="" aria-hidden="true" />
+        </button>
         <a class="detail__login" href="/login">Login</a>
       </div>
     </header>
@@ -82,20 +89,19 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { newsMap } from '../data/news';
 
 const assets = {
- logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&q=80',
-  bell: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTYgOWE2IDYgMCAxMTEyIDBjMCA0IDEgNiAyIDdINGMxLTEgMi0zIDItNyIvPjxwYXRoIGQ9Ik0xMCAxOWEyIDIgMCAwMDQgMCIvPjwvc3ZnPg==',
-  arrowUp: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIyNCIgZmlsbD0iIzRkNzMxOSIvPjxwYXRoIGQ9Ik0yNCAxNmw4IDhoLTZ2MTJoLTRWMjRoLTZsOC04eiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=',
-  phone: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMiAxNi45MnYzYTIgMiAwIDAgMS0yLjE4IDIgMTkuNzkgMTkuNzkgMCAwIDEtOC42My0zLjA3IDE5LjUgMTkuNSAwIDAgMS02LTYgMTkuNzkgMTkuNzkgMCAwIDEtMy4wNy04LjYzQTIgMiAwIDAgMSA0LjExIDJoM2EyIDIgMCAwIDEgMiAxLjcyIDEyLjg0IDEyLjg0IDAgMCAwIC43IDIuODEgMiAyIDAgMCAxLS40NSAyLjExTDguMDkgOS45MWExNiAxNiAwIDAgMCA2IDZsMS4yNy0yLjI3YTIgMiAwIDAgMSAyLjExLS40NSAxMi44NCAxMi44NCAwIDAgMCAyLjgxLjdBMiAyIDAgMCAxIDIyIDE2LjkyeiIvPjwvc3ZnPg==',
-  gmail: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik00IDRoMTZjMS4xIDAgMiAuOSAyIDJ2MTJjMCAxLjEtLjkgMi0yIDJINGMtMS4xIDAtMi0uOS0yLTJWNmMwLTEuMS45LTIgMi0yWiIvPjxwb2x5bGluZSBwb2ludHM9IjIyIDYgMTIgMTMgMiA2Ii8+PC9zdmc+',
-  instagram: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcng9IjUiIHJ5PSI1Ii8+PHBhdGggZD0iTTE2IDExLjM3QTQgNCAwIDEgMSAxMi42MyA4IDQgNCAwIDAgMSAxNiAxMS4zN3oiLz48bGluZSB4MT0iMTcuNSIgeTE9IjYuNSIgeDI9IjE3LjUxIiB5Mj0iNi41Ii8+PC9zdmc+',
-  x: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOC4yNDQgMi4yNWgzLjkzbC04LjU3MyA5LjgwNUwxNi42NDQgMjJoLTcuOTE4bC0zLjgwMy00Ljk3Ni00LjM1MyA0Ljk3NmgtMy45M2w4Ljk2Ni0xMC4yNTRMMi42OCAyLjI1aDguMDc4bDMuNDY2IDQuNTM4IDQuMDE5LTQuNTM4em0tMS4zNzkgMTcuNjYzaDIuMTc2TDUuOTk2IDMuODgxSDMuNjQybDEzLjIyMyAxNi4wMzJ6Ii8+PC9zdmc+',
-  youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41NCA2LjQyYTIuNzggMi43OCAwIDAgMC0xLjk0LTJDMTguODggNCAxMiA0IDEyIDRzLTYuODggMC04LjYuNDZhMi43OCAyLjc4IDAgMCAwLTEuOTQgMkEyOSAyOSAwIDAgMCAxIDExLjc1YTI5IDI5IDAgMCAwIC40NiA1LjMzQTIuNzggMi43OCAwIDAgMCAzLjQgMTljMS43Mi40NiA4LjYuNDYgOC42LjQ2czYuODggMCA4LjYtLjQ2YTIuNzggMi43OCAwIDAgMCAxLjk0LTIgMjkgMjkgMCAwIDAgLjQ2LTUuMjUgMjkgMjkgMCAwIDAtLjQ2LTUuMzN6Ii8+PHBvbHlsaW5lIHBvaW50cz0iOS43NSAxNS4wMiAxNS41IDExLjc1IDkuNzUgOC40OCIvPjwvc3ZnPg==',
-  link: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMCAxM2E1IDUgMCAwIDAgNy41NCAuNTRsMi41LTIuNWE1IDUgMCAwIDAtNy4wNy03LjA3bC0xLjcyIDEuNzEiLz48cGF0aCBkPSJNMTQgMTFhNSA1IDAgMCAwLTcuNTQtLjU0bC0yLjUgMi41YTUgNSAwIDAgMCBMNy4wNyA3LjA3bDEuNzItMS43MSIvPjwvc3ZnPg=='
+  logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&q=80',
+  bell: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGM4YTEzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBhMiAyIDAgMSAwIDQtMiI+PC9wYXRoPjxwYXRoIGQ9Ik0zLjg2IDE3SDIwLjEzYTEgMSAwIDAwLjg3LTEuNTRBMTEuMDMgMTEuMDMgMCAwMDIwIDExYzAtNS41My00LjQ3LTEwLTEwLTEwUzkgNS40NyA5IDExYTExLjAzIDExLjAzIDAgMDAtNS4wMSA0LjQ2IDEgMSAwIDAwLjg3IDEuNTR6Ij48L3BhdGg+PC9zdmc+',
+  arrowUp: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIyNCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMjQgMTZsLTggOGg2djEyaDRWMjRoNmwtOC04eiIgZmlsbD0iIzRDQUY1MCIvPjwvc3ZnPg==',
+  phone: 'https://img.icons8.com/ios-filled/50/4CAF50/phone.png',
+  gmail: 'https://img.icons8.com/color/48/gmail--v1.png',
+  instagram: 'https://img.icons8.com/fluency/48/instagram-new.png',
+  x: 'https://img.icons8.com/ios-filled/50/FFFFFF/twitterx--v1.png',
+  youtube: 'https://img.icons8.com/color/48/youtube-play.png',
 };
 
 const route = useRoute();
@@ -116,6 +122,16 @@ const socialIcon = (label) => {
 };
 
 const article = computed(() => newsMap[route.params.slug]);
+
+const isScrolled = ref(false);
+
+const evaluateScrollState = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 24;
+};
 
 const updateMetadata = (item) => {
   if (typeof document === 'undefined') {
@@ -160,7 +176,20 @@ const scrollTo = (id) => {
   }
 };
 
-onMounted(ensureArticleOrRedirect);
+onMounted(() => {
+  ensureArticleOrRedirect();
+  evaluateScrollState();
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', evaluateScrollState, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', evaluateScrollState);
+  }
+});
 
 watch(
   () => route.params.slug,
@@ -184,16 +213,25 @@ watch(
 
 .detail__navigation {
   align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(202, 196, 208, 0.55);
-  box-shadow: 0 12px 28px rgba(25, 39, 58, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(202, 196, 208, 0.45);
+  box-shadow: 0 12px 26px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
   padding: 1.2rem 2.75rem;
   position: sticky;
   top: 0;
-  z-index: 12;
+  transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+  z-index: 24;
+}
+
+.detail__navigation--glass {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 22px 48px rgba(21, 35, 54, 0.18);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
 .detail__brand {
@@ -396,6 +434,8 @@ watch(
   height: 56px;
   justify-content: center;
   margin-top: 2.5rem;
+  margin-left: auto;
+  align-self: flex-end;
   padding: 0;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 56px;
@@ -471,6 +511,8 @@ watch(
   display: inline-flex;
   height: 56px;
   justify-content: center;
+  align-self: end;
+  justify-self: end;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
   width: 56px;

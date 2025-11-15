@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/Home.vue';
 import NewsList from '../components/NewsList.vue';
 import NewsDetail from '../components/NewsDetail.vue';
+import TeacherDashboard from '../components/TeacherDashboard.vue';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/dokumentasi/:slug',
     name: 'news-detail',
     component: NewsDetail,
+  },
+  {
+    path: '/guru/dashboard',
+    name: 'teacher-dashboard',
+    component: TeacherDashboard,
   },
 ];
 

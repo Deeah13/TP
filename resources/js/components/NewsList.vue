@@ -1,6 +1,6 @@
 <template>
   <div class="news" id="top">
-    <header class="news__navigation" role="banner">
+    <header :class="['news__navigation', { 'news__navigation--glass': isScrolled }]" role="banner">
       <RouterLink class="news__brand" :to="{ name: 'home' }" aria-label="Kembali ke beranda">
         <img :src="assets.brandMark" alt="Logo Terminal Pintar" />
         <span>Terminal Pintar</span>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { newsItems } from '../data/news';
 
@@ -73,6 +73,30 @@ const assets = {
 };
 
 const items = computed(() => newsItems.slice(0, 7));
+
+const isScrolled = ref(false);
+
+const evaluateScrollState = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 24;
+};
+
+onMounted(() => {
+  evaluateScrollState();
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', evaluateScrollState, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', evaluateScrollState);
+  }
+});
 
 const scrollTo = (id) => {
   if (typeof document === 'undefined') {
@@ -101,12 +125,25 @@ const scrollTo = (id) => {
 
 .news__navigation {
   align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(202, 196, 208, 0.6);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(202, 196, 208, 0.45);
+  box-shadow: 0 10px 24px rgba(25, 39, 58, 0.08);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: auto 1fr auto;
-  padding: 1.25rem 2.75rem;
+  padding: 1.2rem 2.75rem;
+  position: sticky;
+  top: 0;
+  transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+  z-index: 24;
+}
+
+.news__navigation--glass {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 22px 46px rgba(21, 35, 54, 0.18);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
 .news__brand {
@@ -213,19 +250,44 @@ const scrollTo = (id) => {
 
 .news-card {
   align-items: center;
-  background: #ffffff;
-  border-radius: 22px;
-  box-shadow: 0 18px 38px rgba(31, 43, 61, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 24px 46px rgba(31, 43, 61, 0.14);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 220px 1fr;
-  padding: 1.5rem 2rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  padding: 1.6rem 2.2rem;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.news-card::before {
+  background: linear-gradient(135deg, rgba(120, 174, 78, 0.08), rgba(76, 138, 19, 0.14));
+  content: '';
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.news-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .news-card:hover {
-  box-shadow: 0 22px 44px rgba(31, 43, 61, 0.18);
-  transform: translateY(-6px);
+  border-color: rgba(120, 174, 78, 0.35);
+  box-shadow: 0 32px 62px rgba(31, 43, 61, 0.22);
+  transform: translateY(-8px);
+}
+
+.news-card:hover::before {
+  opacity: 1;
 }
 
 .news-card__image {
