@@ -518,9 +518,9 @@ const toggleProfile = () => {
   }
 };
 
-const handleLogout = () => {
+const handleLogout = async () => {
   showProfile.value = false;
-  logout();
+  await logout();
   router.replace({ name: 'login' });
 };
 
