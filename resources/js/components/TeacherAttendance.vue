@@ -153,7 +153,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import TeacherWorkspaceLayout from './teacher/TeacherWorkspaceLayout.vue';
+import { TeacherWorkspaceLayout } from './teacher';
 import { useAuth } from '../stores/auth';
 import { createIcon } from '../utils/iconFactory';
 

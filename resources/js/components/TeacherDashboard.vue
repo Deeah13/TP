@@ -107,7 +107,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import TeacherWorkspaceLayout from './teacher/TeacherWorkspaceLayout.vue';
+import { TeacherWorkspaceLayout } from './teacher';
 import { useAuth } from '../stores/auth';
 import { createIcon } from '../utils/iconFactory';
 
